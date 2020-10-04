@@ -1,7 +1,7 @@
 - name: Home
   link: /
-- name: Covid-19
-  link: /topics/covid19/
+#- name: Covid-19
+#  link: /topics/covid19/
 - name: Programming
   link: /topics/programming/
 - name: Statistics
