@@ -78,12 +78,12 @@ defaults:
       type: "pages"
     values:
       layout: "topic_list"
-  -
-    scope:
-      path: ""
-      type: shinyapp
-    values:
-      layout: shinyapp
+#  -
+#    scope:
+#      path: ""
+#      type: shinyapp
+#    values:
+#      layout: shinyapp
 
 # Exclude from processing.
 # The following items will not be processed, by default.

@@ -2,8 +2,6 @@
   link: /
 - name: Covid-19
   link: /topics/covid19/
-- name: Apps
-  link: /visualisations
 - name: Programming
   link: /topics/programming/
 - name: Statistics
