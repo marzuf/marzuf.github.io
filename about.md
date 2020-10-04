@@ -10,8 +10,9 @@ This is my blog with selected topics on (this will give the headers)
 - programming
 - machine learning
 
-with the following tags
+with the following tags (this will give side bar)
 <!-- see ./topics/YYYY-MM-DD-post-template.md -->
+<!-- need to create for each tag the file  ./topics/sidebar/<tag_name> -->
 - cnn
 - evaluation
 - machine_learning
