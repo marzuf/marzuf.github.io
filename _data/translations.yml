@@ -97,5 +97,11 @@
   en-gb: Evaluation
 - id: theory
   en-gb: Theory
+- id: piece_of_code
+  en-gb: Piece of code
+- id: ressource
+  en-gb: Ressource
+- id: cnn
+  en-gb: CNN
 
 

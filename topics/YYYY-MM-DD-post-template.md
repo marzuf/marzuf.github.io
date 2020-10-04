@@ -7,7 +7,8 @@ description: We evaluated the effectiveness of control measure X for 2019-nCoV i
 
 # delete any tags which aren't appropriate
 # if you need more tags, they can be created! Please discuss.
-tags: [transmission-dynamics, severity, lmic-considerations, control-measures, mixing-patterns, healthcare-settings, comments-opinions, forecasts-and-projections] 
+#tags: [transmission-dynamics, severity, lmic-considerations, control-measures, mixing-patterns, healthcare-settings, comments-opinions, forecasts-and-projections] 
+tags: [cnn, evaluation, machine_learning]
 
 # these are the statuses you can choose from; delete/uncomment as necessary
 # defaults to paper-under-peer-review if not set

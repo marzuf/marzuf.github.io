@@ -1,7 +1,7 @@
 ---
 title: UK Colocation Dashboard
 description: Interactive dashboard of Facebook colocation data
-tags: [transmission-dynamics, control-measures, mixing-patterns] 
+tags: [cnn] 
 status: report
 update: 2020-05-20
 authors:
