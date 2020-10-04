@@ -1,0 +1,24 @@
+<div class="collapse navbar-collapse" id="myNavbar">
+	<ul class="nav navbar-nav">
+		{% assign page_categories = page.url | split:'/' %}
+		{% if page.language == "zh-cn" %}
+			{% assign navs = site.data.navigation-zhcn %}
+		{% else %}
+			{% assign navs = site.data.navigation %}
+		{% endif %}
+		{% for item in navs %}
+			{% assign item_categories = item.link | split:'/' %}
+			{% assign in_current=false %}
+				{% for i in item_categories %}
+					{%unless i=='topics' or i=='' or in_current == true%}
+						{% if(page_categories contains i) %}
+							{% assign in_current=true %}
+						{% endif %}
+					{%endunless%}
+				{% endfor %}
+			<li {% if page.url == item.link or in_current == true %}class="active"{% endif %}>
+				<a href="{{ item.link }}">{{ item.name }}</a>
+			</li>
+		{% endfor %}
+	</ul>
+</div>

@@ -1,0 +1,32 @@
+---
+layout: full_page_content
+---
+{% assign group_data = site.data.authors | where: "id", page.group_id | first %}
+<h1>{{ group_data.name }}</h1>
+
+{{ content }}
+
+<p>The {{ group_data.name }} consists of the following members:</p>
+
+<ul id="author-group">
+{% for author in group_data.members %}
+	{% assign author_data = site.data.authors | where: "id", author | first %}
+  <li>
+    {% if author_data.url %}
+      <a href="{{ author_data.url }}">{{ author_data.name }}</a>
+    {% else %}
+		  {{ author_data.name }}
+    {% endif %}
+    {% if author_data.twitter %}
+      (<a href="https://twitter.com/{{ author_data.twitter }}">@{{ author_data.twitter }}</a>)
+    {% endif %}
+  </li>
+{% endfor %}
+</ul>
+
+<script>
+  var list = document.getElementById("author-group");
+  for (var i = list.children.length; i >= 0; i--) {
+    list.appendChild(list.children[Math.random() * i | 0]);
+  }
+</script>

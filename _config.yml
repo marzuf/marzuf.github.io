@@ -1,0 +1,106 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you: 
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+title: CMMID Repository
+description: >- # this means to ignore newlines until "baseurl:"
+  Repository with previous and ongoing work on Covid-19 from the Centre for the Mathematical Modelling of Infectious Diseases (CMMID) at the London School of Hygiene & Tropical Medicine (LSHTM).
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://cmmid.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: cmmid_lshtm
+locale: 'en'
+default_language: 'en-gb'
+
+github:
+  is_project_page: false
+
+# Build settings
+#theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-redirect-from
+
+collections:
+  authors:
+    output: false
+  shinyapp:
+    output: true
+
+exclude: ["README.md", "topics/YYYY-MM-DD-post-template.md", "_shinyapp/template.md", "ncov/readme.md", "ncov", "/translations/*/topics/YYYY-MM-DD-post-template.md"]
+
+permalink: /:categories/:title:output_ext
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      language: "en-gb"
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      status: 'paper-under-peer-review'
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  -
+    scope:
+      path: "topics"
+      type: "posts"
+    values:
+      layout: "research_post"    
+  -
+    scope:
+      path: "topics"
+      type: "pages"
+    values:
+      layout: "topic_list"
+  -
+    scope:
+      path: ""
+      type: shinyapp
+    values:
+      layout: shinyapp
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/

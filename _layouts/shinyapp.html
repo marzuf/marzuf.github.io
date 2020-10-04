@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="{{ site.locale }}">
+  {% include head-shinyapp.html %}
+  <body onload="resizer()">
+	{% include header.html %}
+    <iframe frameborder="0" src="{{ page.shinyurl }}"></iframe>
+	{% include footer.html %}
+  </body>
+</html>
