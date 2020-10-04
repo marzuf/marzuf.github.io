@@ -4,7 +4,6 @@ title: Machine learning
 redirect_from:
   - /machine_learning/
   - /machine_learning
-  - /
 ---
 
 Machine learning topics

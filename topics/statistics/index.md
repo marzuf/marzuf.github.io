@@ -4,7 +4,6 @@ title: Statistics
 redirect_from:
   - /statistics/
   - /statistics
-  - /
 ---
 
 Statistics topics

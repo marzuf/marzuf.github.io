@@ -4,7 +4,6 @@ title: Programming
 redirect_from:
   - /programming/
   - /programming
-  - /
 ---
 
 Programming topics
