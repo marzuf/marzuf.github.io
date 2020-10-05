@@ -103,5 +103,11 @@
   en-gb: Ressource
 - id: cnn
   en-gb: CNN
+- id: statistics
+  en-gb: Statistics
+- id: programming
+  en-gb: Programming
+- id: c++
+  en-gb: C++
 
 
