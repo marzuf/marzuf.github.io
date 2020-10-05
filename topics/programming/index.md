@@ -1,6 +1,8 @@
 ---
 title: Programming
 
+tag_filter: programming
+
 redirect_from:
   - /programming/
   - /programming
