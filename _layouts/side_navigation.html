@@ -31,11 +31,11 @@ layout: default
   <section>
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
-        {% include nav_link url="/topics/covid19/" id="home" %}
-
+        <!-- {% include nav_link url="/topics/covid19/" id="home" %} -->
+        {% include nav_link url="/" id="home" %}
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %}
         {% for tag in site_tags %}
-          {% assign tag_url = "/topics/covid19/" | append: tag | append: ".html" %}
+          {% assign tag_url = "/topics/sidebar/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
         {% endfor %}
 
