@@ -14,16 +14,16 @@ layout: default
 {% assign page_maincat = page.title %}
 {% endif %}
 
-{% if page.maincat %} 
-{% assign filtered_posts = site.tags[page.page_maincat] %}
-{% else %} 
-{% assign filtered_posts = site.posts %}
-{% endif %} 
+<!--  {% if page.maincat %}  -->
+<!--  {% assign filtered_posts = site.tags[page.page_maincat] %}  -->
+<!--  {% else %}  -->
+<!--  {% assign filtered_posts = site.posts %} -->
+<!--  {% endif %}  -->
 
 {% if page.tag_filter %} 
 {% assign myurl = "/topics/sidebar/" | append: page.tag_filter }}
 {% else %} 
-{% assign myurl = "" | append: page.dir | append: "/sidebar" %}
+{% assign myurl = "" | append: page.dir | append: "sidebar/" %}
 {% endif %} 
 
 

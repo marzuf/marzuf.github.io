@@ -1,5 +1,5 @@
 ---
-title: Introduction to cpp
+title: C++ for machine learning
 description: Interactive dashboard of Facebook colocation data
 tags: [machine-learning, c++] 
 status: code
@@ -14,4 +14,4 @@ authors:
 
 ---
 
-intro to c++
+c++ for machine learning

@@ -1,7 +1,7 @@
 ---
-title: UK Colocation Dashboard
+title: Cnn for machine learning
 description: Interactive dashboard of Facebook colocation data
-tags: [cnn] 
+tags: [cnn, machine-learning] 
 status: report
 update: 2020-05-20
 authors:
