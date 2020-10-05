@@ -37,7 +37,7 @@ layout: default
 
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %}
         <!-- {% for tag in site_tags %} -->
-        {% for tag in filtered_posts %}
+        {% for tag in site_tags %}
           {% assign tag_url = "/topics/sidebar/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
         {% endfor %}
