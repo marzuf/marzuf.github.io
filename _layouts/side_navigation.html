@@ -8,11 +8,11 @@ layout: default
 {% assign page_title = page.title %}
 {% endif %}
 
-
+{% assign pcat = page.categories %}
 
 <!-- {% assign myurl = "" | append: page.dir | append: "sidebar/" %} -->
  
- {% assign myurl = "/" | append: page.categories.first | append: "/" | append: page.categories.second %}
+ {% assign myurl = "/" | append: pcat| append: "/"  %}
  
 
 
