@@ -2,7 +2,7 @@
 title: T-test example
 description: Interactive dashboard of Facebook colocation data
 maincat: statistics
-tags: [ttest] 
+tags: [statistics, ttest] 
 status: theory
 update: 2020-10-04
 authors:

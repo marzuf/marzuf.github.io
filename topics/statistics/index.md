@@ -1,6 +1,8 @@
 ---
 title: Statistics
 
+tag_filter: statistics
+
 redirect_from:
   - /statistics/
   - /statistics
