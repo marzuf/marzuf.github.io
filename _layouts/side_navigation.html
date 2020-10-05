@@ -8,14 +8,14 @@ layout: default
 {% assign page_title = page.title %}
 {% endif %}
 
-{% if page.maincat %}
-{% assign page_maincat = page.maincat %}
+<!-- {% if page.maincat %} -->
+<!-- >{% assign page_maincat = page.maincat %} -->
 
 <div class="sidenav">
   <section>
     <div class="page_title">
      <!-- <h1>{% include fn_translate string=page_title %}</h1>  -->
-      <h1>{% include fn_translate string=page_maincat %}</h1> 
+      <h1>{% include page.maincat %}</h1> 
     </div>
   </section>
 
