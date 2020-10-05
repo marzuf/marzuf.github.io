@@ -9,11 +9,9 @@ layout: default
 {% endif %}
 
 
-{% if page.tag_filter %} 
-{% assign myurl = "/topics/sidebar_" | append: page.tag_filter }}
-{% else %} 
+
 {% assign myurl = "" | append: page.dir | append: "sidebar/" %}
-{% endif %} 
+ 
 
 
 
