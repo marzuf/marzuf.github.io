@@ -20,8 +20,8 @@ layout: default
 {% assign filtered_posts = site.posts %}
 {% endif %} 
 
-{% if page.maincat %} 
-{% assign myurl = "/topics/sidebar/" | append: page.maincat }}
+{% if page.tag_filter %} 
+{% assign myurl = "/topics/sidebar/" | append: page.tag_filter }}
 {% else %} 
 {% assign myurl = "/foo/" %}
 {% endif %} 
