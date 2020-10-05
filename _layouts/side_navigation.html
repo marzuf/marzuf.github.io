@@ -15,9 +15,9 @@ layout: default
 {% endif %}
 
 {% if page.maincat %}
-  {% assign filtered_posts = site.tags[page.page_maincat] %}
+{% assign filtered_posts = site.tags[page.page_maincat] %}
 {% else %}
-  {% assign filtered_posts = site.posts %}
+{% assign filtered_posts = site.posts %}
 {% endif %}
 
 <!--  {{ "/my/fancy/url" | append: ".html" }} -->
