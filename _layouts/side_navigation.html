@@ -15,13 +15,12 @@ layout: default
 {% endif %}
 
 {% if page.maincat %}
-{% assign filtered_posts = site.tags[page.page_maincat] %}
+  {% assign filtered_posts = site.tags[page.page_maincat] %}
 {% else %}
-{% assign filtered_posts = site.posts %}
+  {% assign filtered_posts = site.posts %}
 {% endif %}
 
-
-{{ "/my/fancy/url" | append: ".html" }}
+<!--  {{ "/my/fancy/url" | append: ".html" }} -->
 
 
 <div class="sidenav">
@@ -38,7 +37,7 @@ layout: default
 
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %}
         <!-- {% for tag in site_tags %} -->
-        {% for tag in site_tags %}
+        {% for tag in filtered_posts %}
           {% assign tag_url = "/topics/sidebar/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
         {% endfor %}
