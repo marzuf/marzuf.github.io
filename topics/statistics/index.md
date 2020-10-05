@@ -1,10 +1,7 @@
 ---
 title: Statistics
-
 tag_filter: statistics
-
 maincat: statistics
-
 redirect_from:
   - /statistics/
   - /statistics
@@ -12,5 +9,7 @@ redirect_from:
 ---
 
 Statistics topics
+
+<strong>{% include page.tag_filter %}</strong>
 
 <strong>{% include fn_translate id="post-list-heading" %}</strong>. To only show studies for a specific topic, select from the <span class="selector-position-help-md">adjacent list</span><span class="selector-position-help-xs">list above</span>.
