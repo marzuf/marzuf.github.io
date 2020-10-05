@@ -12,6 +12,9 @@ layout: default
 
 {% assign myurl = "/topics/programming/" %}
 
+{% assign mysub1 = page.dir | split:'/' %}
+{% assign mysub = mysub1[1] %}
+
 
 <div class="sidenav">
   <section>
@@ -27,7 +30,7 @@ layout: default
         {% include nav_link url="/" id="home" %}
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} <!-- tried filtered_posts = do not work -->
         {% for tag in site_tags %} 
-          {% assign tag_url = myurl | append: tag | append: ".html" %}
+          {% assign tag_url = mysub | append: tag | append: ".html" %}
           {% if tag_url %} 
             {% include nav_link url=tag_url id=tag %}
           {% endif %}  
