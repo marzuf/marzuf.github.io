@@ -8,12 +8,12 @@ layout: default
 {% assign page_title = page.title %}
 {% endif %}
 
-{% assign pcat = page.dir %}
 
-<!-- {% assign myurl = "" | append: page.dir | append: "sidebar/" %} -->
- 
- {% assign myurl = "/" | append: pcat| append: "/"  %}
- 
+{% if page.tag_filter %} 
+{% assign myurl = "/topics/sidebar/" | append: page.tag_filter }}
+{% else %} 
+{% assign myurl = "" | append: page.dir | append: "sidebar/" %}
+{% endif %} 
 
 
 
