@@ -12,8 +12,8 @@ layout: default
 
 {% assign myurl = "/topics/programming/" %}
 
-{% assign mysub1 = page.dir | split:'/' %}
-{% assign mysub = "/" | append: mysub1.first %}
+{% assign mysub = page.dir | split:'/' | first %}
+
 
 
 <div class="sidenav">
