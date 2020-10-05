@@ -10,7 +10,9 @@ layout: default
 
 
 
-{% assign myurl = "" | append: page.dir | append: "sidebar/" %}
+<!-- {% assign myurl = "" | append: page.dir | append: "sidebar/" %} -->
+ 
+ {% assign myurl = "/" | append: page.categories.first | append: "/" | append: page.categories.second %}
  
 
 
