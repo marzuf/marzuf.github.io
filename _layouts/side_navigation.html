@@ -16,7 +16,7 @@ layout: default
 
 {% if page.maincat %} 
 {% assign filtered_posts = site.tags[page.page_maincat] %}
-{% else %} -->
+{% else %} 
 {% assign filtered_posts = site.posts %}
 {% endif %} 
 
@@ -34,7 +34,7 @@ layout: default
         <!-- {% include nav_link url="/topics/covid19/" id="home" %} -->
         {% include nav_link url="/" id="home" %}
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %}
-        {% for tag in site_tags %} 
+        {% for tag in filtered_posts %} 
           {% assign tag_url = "/topics/sidebar/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
         {% endfor %}
