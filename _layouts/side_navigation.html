@@ -23,7 +23,7 @@ layout: default
 {% if page.tag_filter %} 
 {% assign myurl = "/topics/sidebar/" | append: page.tag_filter }}
 {% else %} 
-{% assign myurl = "/foo/" %}
+{% assign myurl = "" | append: page.dir | append: "sidebar" %}
 {% endif %} 
 
 
