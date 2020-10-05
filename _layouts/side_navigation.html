@@ -11,8 +11,8 @@ layout: default
 
 
 {% assign myurl = "/topics/programming/" %}
-
 {% assign mysub = page.dir | split:'/' | first %}
+{% assign mysub2 = /topics/sidebar %}
 
 
 
@@ -30,7 +30,7 @@ layout: default
         {% include nav_link url="/" id="home" %}
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} <!-- tried filtered_posts = do not work -->
         {% for tag in site_tags %} 
-          {% assign tag_url = mysub | append: tag | append: ".html" %}
+          {% assign tag_url = mysub2 | append: tag | append: ".html" %}
           {% if tag_url %} 
             {% include nav_link url=tag_url id=tag %}
           {% endif %}  
