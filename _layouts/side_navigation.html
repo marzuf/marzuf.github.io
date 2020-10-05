@@ -8,6 +8,13 @@ layout: default
 {% assign page_title = page.title %}
 {% endif %}
 
+{% if page.maincat %}
+{% assign page_maincat = page.maincat %}
+{% else %}
+{% assign page_maincat = page.title %}
+{% endif %}
+
+
 <div class="sidenav">
   <section>
     <div class="page_title">
