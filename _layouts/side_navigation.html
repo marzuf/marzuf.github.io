@@ -20,6 +20,13 @@ layout: default
 {% assign filtered_posts = site.posts %}
 {% endif %} 
 
+{% if page.maincat %} 
+{% assign myurl = "/topics/sidebar/" | append: page.maincat }}
+{% else %} 
+{% assign myurl = "/topics/sidebar/" %}
+{% endif %} 
+
+
 
 <div class="sidenav">
   <section>
@@ -33,7 +40,7 @@ layout: default
       <ul class="nav nav-pills nav-stacked">
         <!-- {% include nav_link url="/topics/covid19/" id="home" %} -->
         {% include nav_link url="/" id="home" %}
-        {% assign site_tags = filtered_posts | where: "language", page.language | map: "tags" | uniq %}
+        {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} <!-- tried filtered_posts = do not work -->
         {% for tag in site_tags %} 
           {% assign tag_url = "/topics/sidebar/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}

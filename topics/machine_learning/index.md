@@ -1,6 +1,8 @@
 ---
 title: Machine learning
 
+tag_filter: machine-learning
+
 maincat: machine-learning
 
 redirect_from:
