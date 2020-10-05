@@ -1,6 +1,8 @@
 ---
 title: Machine learning
 
+maincat: machine-learning
+
 redirect_from:
   - /machine_learning/
   - /machine_learning

@@ -3,6 +3,8 @@ title: Programming
 
 tag_filter: programming
 
+maincat: programming
+
 redirect_from:
   - /programming/
   - /programming

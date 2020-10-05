@@ -3,6 +3,8 @@ title: Statistics
 
 tag_filter: statistics
 
+maincat: statistics
+
 redirect_from:
   - /statistics/
   - /statistics
