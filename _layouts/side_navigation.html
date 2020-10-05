@@ -10,7 +10,7 @@ layout: default
 
 
 
-{% assign myurl = page.dir %}
+{% assign myurl = "topics/programming/" %}
 
 
 <div class="sidenav">
@@ -29,7 +29,7 @@ layout: default
         {% for tag in site_tags %} 
           {% assign tag_url = myurl | append: tag | append: ".html" %}
           {% if tag_url %} 
-          {% include nav_link url=tag_url id=tag %}
+            {% include nav_link url=tag_url id=tag %}
           {% endif %}  
         {% endfor %}
 
