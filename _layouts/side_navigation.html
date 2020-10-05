@@ -25,7 +25,7 @@ layout: default
   <section>
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
-        {% include nav_link url="/topics/sidebar/" id="home" %}
+        {% include nav_link url="/" id="home" %}
 
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %}
         {% for tag in site_tags %}
