@@ -43,8 +43,7 @@ layout: default
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} <!-- tried filtered_posts = do not work -->
         {% for tag in site_tags %} 
           {% assign tag_url = myurl | append: tag | append: ".html" %}
-        <!--  {% if tag_url %}  -->
-	          {% include nav_link url=tag_url id=tag %}
+          {% include nav_link url=tag_url id=tag %}
         {% endfor %}
 
         <!-- {% include nav_link url="/visualisations" id="apps" %} -->
