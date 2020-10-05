@@ -14,35 +14,25 @@ layout: default
 {% assign page_maincat = page.title %}
 {% endif %}
 
-<!--{% if page.maincat %} -->
-<!--{% assign filtered_posts = site.tags[page.page_maincat] %} -->
-<!--{% else %} -->
-<!--{% assign filtered_posts = site.posts %} -->
-<!--{% endif %} -->
-
-<!--  {{ "/my/fancy/url" | append: ".html" }} -->
-
-
 <div class="sidenav">
   <section>
     <div class="page_title">
-      <h1>{% include fn_translate string=page_maincat %}</h1>
+      <h1>{% include fn_translate string=page_title %}</h1>
     </div>
   </section>
 
   <section>
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
-        {% include nav_link url="/" id="home" %}
+        {% include nav_link url="/topics/covid19/" id="home" %}
 
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %}
-        <!-- {% for tag in site_tags %} -->
         {% for tag in site_tags %}
-          {% assign tag_url = "/topics/sidebar/" | append: tag | append: ".html" %}
+          {% assign tag_url = "/topics/covid19/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
         {% endfor %}
 
-       <!-- {% include nav_link url="/visualisations" id="apps" %} -->
+        {% include nav_link url="/visualisations" id="apps" %}
       </ul>
     </div>
     <div class="nav-content">
