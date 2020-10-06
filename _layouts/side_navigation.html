@@ -9,13 +9,6 @@ layout: default
 {% endif %}
 
 
-
-{% assign myurl = "/topics/programming/" %}
-{% assign mysub = page.dir | split:'/' | first %}
-{% assign mysub2 = /topics/sidebar %}
-
-
-
 <div class="sidenav">
   <section>
     <div class="page_title">
@@ -28,12 +21,13 @@ layout: default
       <ul class="nav nav-pills nav-stacked">
         <!-- {% include nav_link url="/topics/covid19/" id="home" %} -->
         {% include nav_link url="/" id="home" %}
-        {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} <!-- tried filtered_posts = do not work -->
+        <!--  {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} --> <!-- tried filtered_posts = do not work -->
+        
+	{% assign site_tags = "evaluation" | split: ',' %}        
+        
         {% for tag in site_tags %} 
-          {% assign tag_url = mysub2 | append: tag | append: ".html" %}
-          {% if tag_url %} 
-            {% include nav_link url=tag_url id=tag %}
-          {% endif %}  
+          {% assign tag_url = "/topics/machine_learning/" | append: tag | append: ".html" %}
+          {% include nav_link url=tag_url id=tag %}
         {% endfor %}
 
         <!-- {% include nav_link url="/visualisations" id="apps" %} -->
