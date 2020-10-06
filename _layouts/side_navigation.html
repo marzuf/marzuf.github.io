@@ -11,9 +11,9 @@ layout: default
 {% if page.tag_filter contains "programming" %}   
 {% assign site_tags = "programming,c++" | split: ',' %}
 {% assign folder = "programming" %}
-{% elsif page.tag_filter contains "machine_learning" %}
-{% assign site_tags = "machine_learning,evaluation" | split: ',' %}
-{% assign folder = "machine-learning" %}
+{% elsif page.tag_filter contains "machine-learning" %}
+{% assign site_tags = "machine-learning,evaluation" | split: ',' %}
+{% assign folder = "machine_learning" %}
 {% elsif page.tag_filter contains "statistics" %}
 {% assign site_tags = "statistics,ttest" | split: ',' %}
 {% assign folder = "statistics" %}
@@ -33,9 +33,6 @@ layout: default
         <!-- {% include nav_link url="/topics/covid19/" id="home" %} -->
         {% include nav_link url="/" id="home" %}
         <!--  {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} --> <!-- tried filtered_posts = do not work -->
-        
-	        
-        
         {% for tag in site_tags %} 
           {% assign tag_url = "/topics/" | append: folder | append: "/sidebar/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
