@@ -7,7 +7,12 @@
     
 
     {%- if page.category -%}
-			{% assign mytit = mytit | append:  include fn_translate id=page.category %}
+    
+    {% capture mycat %}
+    {% include fn_translate id=page.category %}
+    {% endcapture %}
+    
+			{% assign mytit = mytit | append:  mycat %}
         {%- if page.tag_filter -%}
     			{% assign mytit = mytit | append: " - " | append: page.tag_filter %}
         {%- endif -%}    
