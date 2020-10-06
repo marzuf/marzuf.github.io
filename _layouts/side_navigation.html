@@ -8,6 +8,17 @@ layout: default
 {% assign page_title = page.title %}
 {% endif %}
 
+{% if page.tag_filter contains "programming" %}   
+{% assign site_tags = "c++" | split: ',' %}
+{% assign folder = "programming" %}
+{% elsif page.tag_filter contains "machine_learning" %}
+{% assign site_tags = "evaluation" | split: ',' %}
+{% assign folder = "machine_learning" %}
+{% elsif page.tag_filter contains "statistics" %}
+{% assign site_tags = "ttest" | split: ',' %}
+{% assign folder = "statistics" %}
+{% endif %}
+
 
 <div class="sidenav">
   <section>
@@ -23,10 +34,10 @@ layout: default
         {% include nav_link url="/" id="home" %}
         <!--  {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} --> <!-- tried filtered_posts = do not work -->
         
-	{% assign site_tags = "evaluation" | split: ',' %}        
+	        
         
         {% for tag in site_tags %} 
-          {% assign tag_url = "/topics/machine_learning/" | append: tag | append: ".html" %}
+          {% assign tag_url = "/topics/" | append: folder | append: "/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
         {% endfor %}
 
