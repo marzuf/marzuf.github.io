@@ -22,10 +22,6 @@ layout: default
 {% endif %}
 
 
-<!-- {% assign page_dir = page.dir | split:'/' %} -->
-
-
-
 <div class="sidenav">
   <section>
     <div class="page_title">
@@ -40,7 +36,6 @@ layout: default
   <section>
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
-        <!-- {% include nav_link url="/topics/covid19/" id="home" %} -->
         {% include nav_link url="/" id="home" %}
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} 
         {% for tag in site_tags %} 
