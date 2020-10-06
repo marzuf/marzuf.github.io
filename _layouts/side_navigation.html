@@ -9,13 +9,13 @@ layout: default
 {% endif %}
 
 {% if page.tag_filter contains "programming" %}   
-{% assign site_tags = "c++" | split: ',' %}
+{% assign site_tags = "programming,c++" | split: ',' %}
 {% assign folder = "programming" %}
 {% elsif page.tag_filter contains "machine_learning" %}
-{% assign site_tags = "evaluation" | split: ',' %}
-{% assign folder = "machine_learning" %}
+{% assign site_tags = "machine_learning,evaluation" | split: ',' %}
+{% assign folder = "machine-learning" %}
 {% elsif page.tag_filter contains "statistics" %}
-{% assign site_tags = "ttest" | split: ',' %}
+{% assign site_tags = "statistics,ttest" | split: ',' %}
 {% assign folder = "statistics" %}
 {% endif %}
 
@@ -37,7 +37,7 @@ layout: default
 	        
         
         {% for tag in site_tags %} 
-          {% assign tag_url = "/topics/" | append: folder | append: "/" | append: tag | append: ".html" %}
+          {% assign tag_url = "/topics/" | append: folder | append: "/sidebar/" | append: tag | append: ".html" %}
           {% include nav_link url=tag_url id=tag %}
         {% endfor %}
 
