@@ -1,5 +1,5 @@
 ---
-tag_filter: [evaluation]
+tag_filter: evaluation
 category: machine-learning
 ---
 

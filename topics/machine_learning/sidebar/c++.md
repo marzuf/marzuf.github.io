@@ -1,5 +1,5 @@
 ---
-tag_filter: [c++]
+tag_filter: c++
 category: machine-learning
 ---
 

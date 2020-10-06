@@ -1,5 +1,5 @@
 ---
-tag_filter: [cnn]
+tag_filter: cnn
 cateogry: machine-learning
 ---
 

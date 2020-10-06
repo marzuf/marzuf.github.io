@@ -1,5 +1,5 @@
 ---
-tag_filter: [java]
+tag_filter: java
 category: programming
 ---
 
