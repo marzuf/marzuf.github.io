@@ -29,7 +29,7 @@ layout: default
 <div class="sidenav">
   <section>
     <div class="page_title">
-      {% if page.category %}
+      {% if page.tag_filter %}
         <h1>{% include fn_translate string=page.category %} - {% include fn_translate string=page_title %}</h1>      
       {% else %}
         <h1>{% include fn_translate string=page_title %}</h1>

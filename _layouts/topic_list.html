@@ -2,8 +2,8 @@
 layout: side_navigation
 ---
 
-{% if page.category %}
-  {% assign filtered_posts = site.categories[page.category] %}  
+{% if page.category %}  
+  {% assign filtered_posts  = site.posts | where: "category", page.category %}
 {% else %}
   {% assign filtered_posts = site.posts %}
 {% endif %}
