@@ -9,7 +9,7 @@ layout: side_navigation
 {% endif %}
 
 {% if page.tag_filter %}
-  {% assign filtered_posts = filtered_posts | where_exp: "item", "item.tags == 'c++'" %}
+  {% assign filtered_posts = site.categories[page.category] | where: "tag_filter", page.tag_filter %}
 {% endif %}
 
 {% assign posts = filtered_posts | where: "language", page.language %}
