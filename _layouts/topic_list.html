@@ -2,11 +2,14 @@
 layout: side_navigation
 ---
 
-{% if page.tag_filter %}
-  {% assign filtered_posts = site.tags[page.tag_filter] %}
-{% else %}
-  {% assign filtered_posts = site.posts %}
-{% endif %}
+{% assign foo_filters = ['c++'] %}
+{% assign filtered_posts = "" | split: "" %}
+{% for myfilter in foo_filters %}
+  {% unless filtered_posts contains myfilter %}
+    {% assign filtered_posts = filtered_posts | push: site.tags[myfilter] %}
+  {% endunless %}
+{% endfor %}
+
 
 {% assign posts = filtered_posts | where: "language", page.language %}
 {% if posts.size > 0 %}
@@ -14,6 +17,11 @@ layout: side_navigation
 {% endif %}
 
 <div class="blog list">
+
+
+ {{ site.tags[myfilter] }}
+
+
   {{content}}
 
   {% if posts.size > 0 %}
