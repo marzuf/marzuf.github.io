@@ -11,12 +11,6 @@ layout: default
 {% if page.tag_filter contains "programming" %}   
 {% assign site_tags = "programming,c++" | split: ',' %}
 {% assign folder = "programming" %}
-{% elsif page.tag_filter contains "machine-learning" %}
-{% assign site_tags = "machine-learning,evaluation" | split: ',' %}
-{% assign folder = "machine_learning" %}
-{% elsif page.tag_filter contains "statistics" %}
-{% assign site_tags = "statistics,ttest" | split: ',' %}
-{% assign folder = "statistics" %}
 {% endif %}
 
 
