@@ -2,15 +2,6 @@
 layout: side_navigation
 ---
 
-{% assign notjekyllposts = "" | split: "" %}
-{% for apost in site.posts %}
-  {% unless apost.categories contains 'jekyll' %}
-    {% assign notjekyllposts = notjekyllposts | push: apost %}
-  {% endunless %}
-{% endfor %}
-{% include post-list.html posts=notjekyllposts %}
-
-
 {% if page.tag_filter %}
 
   {% assign all_filters = page.tag_filter %}
