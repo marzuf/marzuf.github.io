@@ -7,12 +7,16 @@
     
 
     {%- if page.category -%}
-			{% assign mytit = mytit | append: " - " | append: page.category %}
+			{% assign mytit = mytit | append: page.category %}
+        {%- if page.tag_filter -%}
+    			{% assign mytit = mytit | append: " - " | append: page.tag_filter %}
+        {%- endif -%}    
+    {% else %}
+      {%- if page.tag_filter -%}
+  			{% assign mytit = mytit | append: page.tag_filter %}
+      {%- endif -%}    
     {%- endif -%}
     
-    {%- if page.tag_filter -%}
-			{% assign mytit = mytit | append: " - " | append: page.tag_filter %}
-    {%- endif -%}    
 
     
 	{%- if mytit == "" -%}
