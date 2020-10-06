@@ -1,32 +1,26 @@
-
 ---
 layout: default
 ---
 
-    
-{% if page.category == "programming" %}   
-{% assign all_tags = "c++,java,java2" | split: ',' %}
-{% assign folder = "programming" %}
-
----
-layout: default
----
-
-    
-{% if page.category == "statistics" %}   
-{% assign all_tags = "ttest" | split: ',' %}
-{% assign folder = "statistics" %}
-{% if page.category == "programming" %}   
-{% assign all_tags = "c++,java,java2" | split: ',' %}
-{% assign folder = "programming" %}
-{% if page.category == "machine_learning" %}   
-{% assign all_tags = "c++,cnn,evaluation" | split: ',' %}
-{% assign folder = "machine_learning" %}
 {% if page.tag_filter %}
 {% assign page_title = page.tag_filter %}
 {% else %}
 {% assign page_title = page.title %}
 {% endif %}
+
+{% if page.category == "programming" %}   
+{% assign all_tags = "c++,java" | split: ',' %}
+{% assign folder = "programming" %}
+
+{% elsif page.category == "machine-learning" %}
+{% assign all_tags = "evaluation,c++,cnn" | split: ',' %}
+{% assign folder = "machine_learning" %}
+
+{% elsif page.category == "statistics" %}
+{% assign all_tags = "ttest" | split: ',' %}
+{% assign folder = "statistics" %}
+{% endif %}
+
 
 <div class="sidenav">
   <section>

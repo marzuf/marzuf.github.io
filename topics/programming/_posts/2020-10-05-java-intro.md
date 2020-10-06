@@ -1,7 +1,7 @@
 ---
 title: Introduction to java
 description: Interactive dashboard of Facebook colocation data
-tags: [java] 
+tags: [java,java2] 
 category : programming
 status: code
 update: 2020-10-05
