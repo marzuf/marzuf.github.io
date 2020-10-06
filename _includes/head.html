@@ -4,25 +4,10 @@
     <title>{%- if page.title -%}
 			{{ page.title }}
 		{%- elsif page.tag_filter -%}
-														{% comment %}
-												      {% include fn_translate id=page.tag_filter %
-												      		{% endcomment %}
-{% assign fooname= "FOO"}
-{% comment %}
-{% assign filternames = "" | split: "" %}
-{% for tagfilter in page.tag_filter %}
-  {% assign filternames = filternames | push: include fn_translate id=page.tag_filter %}
-{% endfor %}
-{{ filternames }}
-{% endcomment %}
-{{ fooname }}
-												      		
-												      		
-												      		
+      {% assign fooname = "FOO" %}
+      {{ fooname }}
 		{%- else -%}
-															{% comment %}
-																Centre for Mathematical Modelling of Infectious Diseases
-															{% endcomment %}
+			Centre for Mathematical Modelling of Infectious Diseases
 			Marie Zufferey's blog
 		{%- endif -%}&nbsp;| {{ site.title }}</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>	
@@ -49,10 +34,3 @@
 		{%- include research_post_rmarkdown_scripts_head.html -%}
 	{%- endif -%}
 </head>
-
-
-
-
-
-
-
