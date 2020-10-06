@@ -2,12 +2,6 @@
 layout: default
 ---
 
-{% if page.category %}
-{% assign page_title1 = include fn_translate string=page.category | append: " - " %}
-{% else %}
-{% assign page_title1 = "" %}
-{% endif %}
-
 {% if page.tag_filter %}
 {% assign page_title = page.tag_filter %}
 {% else %}
@@ -35,7 +29,11 @@ layout: default
 <div class="sidenav">
   <section>
     <div class="page_title">
-      <h1>{{ page_title1 }} {% include fn_translate string=page_title %}</h1>
+      {% if page.category %}
+        <h1>{% include fn_translate string=page.category %} - {% include fn_translate string=page_title %}</h1>      
+      {% else %}
+        <h1>{% include fn_translate string=page_title %}</h1>
+      {% endif %}
     </div>
   </section>
 

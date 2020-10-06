@@ -1,7 +1,8 @@
 ---
 title: C++ for machine learning
 description: Interactive dashboard of Facebook colocation data
-tags: [machine-learning, c++] 
+tags: [c++] 
+category: machine-learning
 status: code
 update: 2020-10-05
 authors:
