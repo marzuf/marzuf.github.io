@@ -4,12 +4,7 @@ layout: side_navigation
 
 {% if page.tag_filter %}
 
-  {% assign all_filters = page.tag_filter %}
-  {% assign filtered_posts = "" | split: "" %}
-  {% for myfilter in all_filters %}  
-    {% assign filtered_posts = filtered_posts | push: site.tags[myfilter] %}  
-  {% endfor %}
-  <!-- {% assign filtered_posts = site.tags[page.tag_filter] %} -->
+  {% assign filtered_posts = site.tags[page.tag_filter] %}
 {% else %}
   {% assign filtered_posts = site.posts %}
 {% endif %}
