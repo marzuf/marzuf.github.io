@@ -7,11 +7,15 @@
 														{% comment %}
 												      {% include fn_translate id=page.tag_filter %
 												      		{% endcomment %}
-												      		{% assign filternames = "" | split: "" %}
+{% assign fooname= "FOO"}
+{% comment %}
+{% assign filternames = "" | split: "" %}
 {% for tagfilter in page.tag_filter %}
   {% assign filternames = filternames | push: include fn_translate id=page.tag_filter %}
 {% endfor %}
 {{ filternames }}
+{% endcomment %}
+{{ fooname }}
 												      		
 												      		
 												      		
