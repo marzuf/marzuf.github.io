@@ -9,12 +9,14 @@ layout: default
 {% endif %}
 
 {% if page.category == "programming" %}   
-{% assign all_tags = "programming,c++" | split: ',' %}
+{% assign all_tags = "c++,java" | split: ',' %}
 {% assign folder = "programming" %}
+
 {% elsif page.tag_filter contains "machine-learning" %}
-{% assign all_tags = "machine-learning,evaluation" | split: ',' %}
+{% assign all_tags = "evaluation" | split: ',' %}
 {% assign folder = "machine_learning" %}
-{% elsif page.tag_filter contains "statistics" %}
+
+{% elsif page.category == "statistics" %}
 {% assign all_tags = "statistics,ttest" | split: ',' %}
 {% assign folder = "statistics" %}
 {% endif %}
