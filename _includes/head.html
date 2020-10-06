@@ -7,7 +7,7 @@
     
 
     {%- if page.category -%}
-			{% assign mytit = mytit | append: page.category %}
+			{% assign mytit = mytit | append:  include fn_translate id=page.category %}
         {%- if page.tag_filter -%}
     			{% assign mytit = mytit | append: " - " | append: page.tag_filter %}
         {%- endif -%}    
