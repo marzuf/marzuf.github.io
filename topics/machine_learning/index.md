@@ -1,6 +1,6 @@
 ---
 title: Machine learning
-tag_filter: machine-learning
+category:machine-learning
 redirect_from:
   - /machine_learning/
   - /machine_learning
