@@ -1,6 +1,6 @@
 ---
 title: Programming
-category:programming
+category: programming
 redirect_from:
   - /programming/
   - /programming
