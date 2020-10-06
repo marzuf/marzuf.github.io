@@ -1,15 +1,32 @@
 <head>
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{%- if page.title -%}
-			{{ page.title }}
-		{%- elsif page.tag_filter -%}
-      {% assign fooname = "FOO" %}
-      {{ fooname }}
-		{%- else -%}
-			Centre for Mathematical Modelling of Infectious Diseases
-			Marie Zufferey's blog
-		{%- endif -%}&nbsp;| {{ site.title }}</title>
+    <title>
+    
+    {% assign mytit = "" %}
+    
+    {% if page.title %}
+			{{ mytit = mytit | append: " - " | append: page.title }}
+    {%- endif -%}
+
+    {% if page.category %}
+			{{ mytit = mytit | append: " - " | append: page.category }}
+    {%- endif -%}
+
+    {% if page.tag_filter %}
+			{{ mytit = mytit | append: " - "  | append: page.tag_filter }}
+    {%- endif -%}
+
+    
+	{% if mytit = "" %}
+	
+	    {% assign mytit = "MZ's blog'" %}
+
+    {%- endif -%}
+    
+     {{ mytit }}
+     
+     &nbsp;| {{ site.title }}</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>	
 	<!-- use bootstrap -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
