@@ -5,15 +5,15 @@
     
     {% assign mytit = "" %}
     
-    {% if page.title %}
+    {%- if page.title -%}
 			{{ mytit = mytit | append: " - " | append: page.title }}
     {%- endif -%}
 
-    {% if page.category %}
+    {%- if page.category -%}
 			{{ mytit = mytit | append: " - " | append: page.category }}
     {%- endif -%}
 
-    {% if page.tag_filter %}
+    {%- if page.tag_filter -%}
 			{{ mytit = mytit | append: " - "  | append: page.tag_filter }}
     {%- endif -%}
 
