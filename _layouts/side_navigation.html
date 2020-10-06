@@ -2,6 +2,12 @@
 layout: default
 ---
 
+{% if page.category %}
+{% assign page_title1 = page.category | append: " - " %}
+{% else %}
+{% assign page_title1 = "" %}
+{% endif %}
+
 {% if page.tag_filter %}
 {% assign page_title = page.tag_filter %}
 {% else %}
@@ -12,12 +18,12 @@ layout: default
 {% assign all_tags = "c++,java" | split: ',' %}
 {% assign folder = "programming" %}
 
-{% elsif page.tag_filter contains "machine-learning" %}
-{% assign all_tags = "evaluation" | split: ',' %}
+{% elsif page.category == "machine-learning" %}
+{% assign all_tags = "evaluation,c++,cnn" | split: ',' %}
 {% assign folder = "machine_learning" %}
 
 {% elsif page.category == "statistics" %}
-{% assign all_tags = "statistics,ttest" | split: ',' %}
+{% assign all_tags = "ttest" | split: ',' %}
 {% assign folder = "statistics" %}
 {% endif %}
 
@@ -29,7 +35,7 @@ layout: default
 <div class="sidenav">
   <section>
     <div class="page_title">
-      <h1>{% include fn_translate string=page_title %}</h1>
+      <h1>{{ page_title1 }} - {% include fn_translate string=page_title %}</h1>
     </div>
   </section>
 
