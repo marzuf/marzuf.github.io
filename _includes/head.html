@@ -6,6 +6,10 @@
     {% assign mytit = "" %} 
     
 
+    {%- if page.category -%}
+			{% assign mytit = mytit | append: " - " | append: page.category %}
+    {%- endif -%}
+
     
 	{%- if mytit == "" -%}
 	
