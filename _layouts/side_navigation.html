@@ -9,22 +9,16 @@ layout: default
 {% endif %}
 
 {% if page.tag_filter contains "programming" %}   
-{% assign site_tags = "programming,c++" | split: ',' %}
+{% assign all_tags = "programming,c++" | split: ',' %}
 {% assign folder = "programming" %}
 {% elsif page.tag_filter contains "machine-learning" %}
-{% assign site_tags = "machine-learning,evaluation" | split: ',' %}
+{% assign all_tags = "machine-learning,evaluation" | split: ',' %}
 {% assign folder = "machine_learning" %}
 {% elsif page.tag_filter contains "statistics" %}
-{% assign site_tags = "statistics,ttest" | split: ',' %}
+{% assign all_tags = "statistics,ttest" | split: ',' %}
 {% assign folder = "statistics" %}
 {% endif %}
 
-
-{% if page.tag_filter contains "programming" %}   
-{% assign site_tags = "programming,c++" | split: ',' %}
-{% endif %}
-
-{% assign site_tags = "c++" | split: ',' %}
 
 <div class="sidenav">
   <section>
@@ -38,11 +32,12 @@ layout: default
       <ul class="nav nav-pills nav-stacked">
         <!-- {% include nav_link url="/topics/covid19/" id="home" %} -->
         {% include nav_link url="/" id="home" %}
-        <!--  {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} --> <!-- tried filtered_posts = do not work -->
-	{% assign site_tags = "c++" | split: ',' %}        
+        {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} 
         {% for tag in site_tags %} 
-          {% assign tag_url = "/topics/" | append: folder | append: "/sidebar/" | append: tag | append: ".html" %}
-          {% include nav_link url=tag_url id=tag %}
+          {% if all_tags contains tag %}   
+            {% assign tag_url = "/topics/" | append: folder | append: "/sidebar/" | append: tag | append: ".html" %}
+            {% include nav_link url=tag_url id=tag %}
+          {% endif %}            
         {% endfor %}
 
         <!-- {% include nav_link url="/visualisations" id="apps" %} -->
