@@ -3,27 +3,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
     
-    {% assign mytit = "" %}
+    {% assign mytit = "" %}  <!-- with the hyphens: strip the generated whitespace from the rendered template: -- >
     
-    {%- if page.title -%}
-			{{ mytit = mytit | append: " - " | append: page.title }}
-    {%- endif -%}
 
-    {%- if page.category -%}
-			{{ mytit = mytit | append: " - " | append: page.category }}
-    {%- endif -%}
-
-    {%- if page.tag_filter -%}
-			{{ mytit = mytit | append: " - "  | append: page.tag_filter }}
-    {%- endif -%}
-
-    
-	{%- if mytit = "" -%}
-	
-	    {% assign mytit = "MZ's blog'" %}
-
-    {%- endif -%}
-    
      {{ mytit }}
      
      &nbsp;| {{ site.title }}</title>
