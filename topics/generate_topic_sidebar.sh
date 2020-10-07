@@ -44,7 +44,7 @@ for fold in ${all_cat_folds[@]}; do
 	for unique_tag in ${noDupArr[@]}; do
 		echo $unique_tag
 		outFile="$outFold/${unique_tag}.md"
-		
+		rm -f $outFile
 
 	
 		cat >> ${outFile} <<- EOM
@@ -60,6 +60,7 @@ for fold in ${all_cat_folds[@]}; do
 
 		echo "... written: $outFile"			
 		
+		exit
 		
 	done
 	
