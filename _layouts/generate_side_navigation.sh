@@ -7,6 +7,9 @@ template_file="side_navigation_template.html"
 new_out_file_tmp="side_navigation.html_tmp"
 new_out_file="side_navigation.html"
 
+rm -f $new_out_file_tmp
+rm -f $new_out_file
+
 cat >> ${new_out_file_tmp} <<- EOM
 
 ---
