@@ -11,12 +11,9 @@ rm -f $new_out_file_tmp
 rm -f $new_out_file
 
 cat >> ${new_out_file_tmp} <<- EOM
-
 ---
 layout: default
 ---
-
-	    
 EOM
 	
 
