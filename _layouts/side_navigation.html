@@ -41,7 +41,7 @@ layout: default
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
         {% include nav_link url="/" id="home" %}
-        {% if page.category %}
+        {% if page.category == "programming" %}
           {% assign category_url = "/topics/" | append: page.category }
           {% include nav_link url=category_url id=page.category %}
         {% endif %}        
