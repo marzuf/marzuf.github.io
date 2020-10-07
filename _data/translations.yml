@@ -93,6 +93,8 @@
   en-gb: Forecasts and projections
 - id: machine-learning
   en-gb: Machine learning
+- id: machine_learning
+  en-gb: Machine learning
 - id: evaluation
   en-gb: Evaluation
 - id: theory
@@ -111,9 +113,9 @@
   en-gb: C++
 - id: java
   en-gb: Java
-- id: ttest
-  en-gb: t-test
+- id: stattests
+  en-gb: Statistical tests
 - id: poo
-  en-gb: object oriented programming
+  en-gb: O-o programming
 
 

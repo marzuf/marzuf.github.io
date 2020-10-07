@@ -1,5 +1,5 @@
 ---
-tag_filter: tests
+tag_filter: stattests
 category: statistics
 ---
 

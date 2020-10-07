@@ -1,7 +1,7 @@
 ---
 title: wilcox-test implementation
 description: Implementation of wilcox test in c++
-tags: [c++, tests] 
+tags: [c++, stattests] 
 category: statistics
 status: code
 update: 2020-10-07

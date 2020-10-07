@@ -1,7 +1,7 @@
 ---
 title: T-test theory
 description: theory for T-test
-tags: [tests] 
+tags: [stattests] 
 category: statistics
 status: theory
 update: 2020-10-04

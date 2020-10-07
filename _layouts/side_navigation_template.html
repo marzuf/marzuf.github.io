@@ -20,6 +20,10 @@
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
         {% include nav_link url="/" id="home" %}
+        {% if page.category %}
+          {% assign category_url = "/topics/" | append: page.category }
+          {% include nav_link url=category_url id=page.category %}
+        {% endif %}        
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} 
         {% for tag in site_tags %} 
           {% if all_tags contains tag %}   
