@@ -25,7 +25,9 @@ layout: default
 {% assign page_title = page.title %}
 {% endif %}
 
+{% if page.category %}
 {% assign myurl = "/topics/" | append: page.category | append: "/" %}
+{% endif %}
 
 <div class="sidenav">
   <section>
@@ -42,7 +44,9 @@ layout: default
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
         {% include nav_link url="/" id="home" %}
-        {% include nav_link url=myurl id=page.category %}
+        {% if page.category %}
+          {% include nav_link url=myurl id=page.category %}
+        {% endif %}
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} 
         {% for tag in site_tags %} 
           {% if all_tags contains tag %}   
