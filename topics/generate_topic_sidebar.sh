@@ -48,7 +48,6 @@ for fold in ${all_cat_folds[@]}; do
 
 	
 		cat >> ${outFile} <<- EOM
-
 		---
 		tag_filter: $unique_tag
 		category: $mycat
@@ -59,8 +58,6 @@ for fold in ${all_cat_folds[@]}; do
 		EOM
 
 		echo "... written: $outFile"			
-		
-		exit
 		
 	done
 	
