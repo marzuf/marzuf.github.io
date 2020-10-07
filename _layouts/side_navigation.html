@@ -19,12 +19,13 @@ layout: default
 {% assign folder = "machine_learning" %}
 {% endif %}
 
-
 {% if page.tag_filter %}
 {% assign page_title = page.tag_filter %}
 {% else %}
 {% assign page_title = page.title %}
 {% endif %}
+
+{% assign myurl = "topics/" | append: page.category | append: "/" %}
 
 <div class="sidenav">
   <section>
@@ -41,7 +42,7 @@ layout: default
     <div class="navigation">
       <ul class="nav nav-pills nav-stacked">
         {% include nav_link url="/" id="home" %}
-        {% include nav_link url="/topics/programming/" id="programming" %}
+        {% include nav_link url=myurl id=page.category %}
         {% assign site_tags = site.posts | where: "language", page.language | map: "tags" | uniq %} 
         {% for tag in site_tags %} 
           {% if all_tags contains tag %}   
