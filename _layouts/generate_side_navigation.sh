@@ -49,9 +49,12 @@ for fold in ${all_cat_folds[@]}; do
 
 	
 	cat >> ${new_out_file_tmp} <<- EOM
+	
 {% if page.category == "$mycat" %}   
 {% assign all_tags = "$tag_list" | split: ',' %}
 {% assign folder = "$mycat" %}
+{% endif %}
+
 	EOM
 	
 done

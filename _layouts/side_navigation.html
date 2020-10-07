@@ -4,15 +4,25 @@ layout: default
 ---
 
     
+
 {% if page.category == "statistics" %}   
 {% assign all_tags = "ttest" | split: ',' %}
 {% assign folder = "statistics" %}
+{% endif %}
+
+
 {% if page.category == "programming" %}   
 {% assign all_tags = "c++,java,java2" | split: ',' %}
 {% assign folder = "programming" %}
+{% endif %}
+
+
 {% if page.category == "machine_learning" %}   
 {% assign all_tags = "c++,cnn,evaluation" | split: ',' %}
 {% assign folder = "machine_learning" %}
+{% endif %}
+
+
 {% if page.tag_filter %}
 {% assign page_title = page.tag_filter %}
 {% else %}
