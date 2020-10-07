@@ -1,18 +1,13 @@
 ---
-title: Introduction to java
-description: Interactive dashboard of Facebook colocation data
-tags: [java,java2] 
+title: theory to java POO
+description: object-oriented programming in java
+tags: [java,poo] 
 category : programming
-status: code
+status: theory
 update: 2020-10-05
 authors:
-  - id: hamish_gibbs
+  - id: marzuf
     corresponding: true
-  - id: ncov-group
-  - id: roz_eggo
-  - id: chris_grundy
-  - id: adam_kucharski
-
 ---
 
-intro to Java
+theory POO java

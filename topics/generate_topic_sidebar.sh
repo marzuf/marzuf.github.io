@@ -39,6 +39,7 @@ for fold in ${all_cat_folds[@]}; do
 	noDupArr=(); while IFS= read -r -d '' x; do noDupArr+=("$x"); done < <(printf "%s\0" "${singletonArr[@]}" | sort -uz)  # remove duplicated tags
 	
 	outFold="$mycat/sidebar"
+	rm -rf $outFold
 	mkdir -p $outFold
 
 	for unique_tag in ${noDupArr[@]}; do

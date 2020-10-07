@@ -1,18 +1,13 @@
 ---
 title: Bias-variance trade-off
-description: Interactive dashboard of Facebook colocation data
+description: trade-off between bias and variance
 category: machine-learning
 tags: [evaluation] 
 status: theory
 update: 2020-10-04
 authors:
-  - id: hamish_gibbs
+  - id: marzuf
     corresponding: true
-  - id: ncov-group
-  - id: roz_eggo
-  - id: chris_grundy
-  - id: adam_kucharski
-
 ---
 
 

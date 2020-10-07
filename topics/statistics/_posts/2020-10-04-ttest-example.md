@@ -1,14 +1,13 @@
 ---
-title: T-test example
-description: Interactive dashboard of Facebook colocation data
-tags: [ttest] 
+title: T-test theory
+description: theory for T-test
+tags: [tests] 
 category: statistics
 status: theory
 update: 2020-10-04
 authors:
   - id: marzuf
     corresponding: true
-
 ---
 
-example of ttest.
+theory about ttest.
