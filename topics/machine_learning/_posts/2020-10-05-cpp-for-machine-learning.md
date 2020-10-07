@@ -2,7 +2,7 @@
 title: C++ for machine learning
 description: cpp for ML
 tags: [c++] 
-category: machine-learning
+category: machine_learning
 status: code
 update: 2020-10-05
 authors:

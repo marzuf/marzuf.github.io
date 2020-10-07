@@ -1,7 +1,7 @@
 ---
 title: Bias-variance trade-off
 description: trade-off between bias and variance
-category: machine-learning
+category: machine_learning
 tags: [evaluation] 
 status: theory
 update: 2020-10-04
