@@ -1,6 +1,6 @@
 ---
 title: Machine learning
-category: machine-learning
+category: machine_learning
 redirect_from:
   - /machine_learning/
   - /machine_learning

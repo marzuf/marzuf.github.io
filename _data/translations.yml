@@ -97,7 +97,7 @@
   en-gb: Evaluation
 - id: theory
   en-gb: Theory
-- id: piece_of_code
+- id: code
   en-gb: Piece of code
 - id: ressource
   en-gb: Ressource
@@ -115,5 +115,5 @@
   en-gb: t-test
 - id: poo
   en-gb: object oriented programming
-  
+
 
