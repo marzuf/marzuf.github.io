@@ -670,17 +670,106 @@ attention ! les symboles `&` et `*` peuvent être utilisés pour 2 choses diffé
 * `int& x(y);` définit `x` comme référence sur `y`
 * `int* ptr` définit `ptr` comme un pointeur sur un `int`
 
-```
+##### Pointeurs: allocation dynamique
+
+* l'allocation est dite statique lorsque le besoin de mémoire est connu dès la compilation
+* l'allocation est dite dynamique lorsque le besoin en mémoire n'est connu qu'à l'exécution
+
+allocation avec pointeurs: dans le cas des pointeurs, l'allocation dynamique permet de réserver une zone mémoire indépendamment de toute variable; le pointeur pointera alors directement sur la zone mémoire plutôt que sur une variable 
+
+les opérateurs `new` et `delete` permettent d'allouer et libérer de la mémoire, respectivement 
 
 ```
+ptr = new type;
 ```
-
-
-```
-
+`ptr` est un pointeur dans lequel sera stockée l'adresse de la zone mémoire de type `type` dynamiquement allouée, e.g.
 
 ```
+int* ptr;
+ptr = new int;
+```
+
+comme lors de la déclaration d'une variable de type `int`, celle-ci n'est pas initialisée; pour ce faire 
 
 ```
+ptr = new type(valeur);  
 ```
+
+où `valeur` est la valeur d'initialisation
+
+dans le cas d'une allocation statique, une variable ne peut pas survivre à sa portée (i.e. elle est automatiquement libérée à la fin de celle-ci)
+
+dans le cas d'une allocation dynamique, une variable survit à sa portée; cependant lorsque les données qui ont été allouées dynamiquement, ne sont plus nécessaires dans la suite du déroulement du programme, il convient de les libérer afin de ménager les ressources; l'opérateur `delete` permet de libérer une zone mémoire; utilisation:
+
 ```
+delete ptr;
+```
+
+si l'on tente d'accéder à une zone mémoire désallouée, risque de `Segmentation Fault`; il est fortement conseillé de faire suivre tous les `delete` de l'instruction `ptr = nullptr;`, ce qui permet de mettre en place des gardes-fous afin d'empêcher le programme d'accéder à une zone mémoire dont il n'est plus propriétaire
+
+mais il faut veiller à ne pas affecter `nullptr` à un pointeur avant que celui n'ait été libéré; la zone mémoire ne pourrait alors plus être atteinte, ni même supprimée; cela s'appelle une fuite de mémoire, et doit être évité
+
+il est aussi fortement conseillé de libérer avec l'instruction `delete` toute zone mémoire qui a été allouée à l'aide de `new` (la libération n'est pas automatique)
+
+exemple:
+
+```
+int* px(nullptr);	// allouer statiquement un pointeur sur un entier, initialisé à nullptr
+px = new int;	// allocation dynamique d'un entier, adresse de la zone mémoire allouée stockée dans px
+*px = 20; // le contenu sur lequel pointe px est initialisé à 20
+// ces 3 lignes peuvent être remplacées directement par
+// int* px(new int(20));
+cout << *px << endl; // afficher le contenu 
+delete px; // libérer la zone mémoire 
+px = nullptr; // affecter nullptr
+```
+
+une erreur `Segmentation Fault` se produit typiquement quand on tente d'accéder via un pointeur à une zone mémoire qui n'a pas été allouée, exemple:
+```
+int* px;    // px est déclaré mais pas initialisé, il contient donc une adresse aléatoire
+*px = 20;   // on tente d'accéder au contenu de px alors qu'il est inconnu ! ERREUR !!! px n'a pas été alloué 
+cout << *px << endl;
+```
+il convient d'allouer dynamiquement un emplacement mémoire et de stocker son adresse dans `px`
+
+il faut toujours initialiser un pointeur; c'est la valeur `nullptr` qui doit être utilisée si la zone mémoire pointée n'est pas connue à l'initialisation
+
+avant d'accéder au contenu pointé, on peut vérifier si le pointeur ne contient pas `nullptr`, ce qui signifie qu'il pointe vers rien 
+
+##### Pointeurs "intelligents"
+
+depuis C++, d'autres types de pointeurs sont disponibles dans le cas de l'allocation dynamique: les pointeurs intelligents (smart pointers); utilisation plus confortable: ils libèrent automatiquement la mémoire au moment opportun; ils facilitent la gestion de la mémoire grâce à un mécanisme de ramasse-miettes (garbage collecting)
+
+ces pointeurs sont définis dans la bibliothèque `memory`; 3 types; la principale différence est le nombre de pointeurs de même type qui peuvent référencer une même zone mémoire (ne peut avoir qu'un seul `unique_ptr` pointant vers une zone mémoire alors qu'il peut y avoir plusieurs `shared_ptr` ou `weak_ptr` pointant vers la même zone mémoire)
+
+dans le cas des pointeurs "à la C" il n'y a pas de restriction quant au nombre de pointeurs pouvant pointer sur la même zone mémoire; implique une grande rigueur (e.g. si un des pointeurs libère la zone, il faut être sûr que l'autre n'en a plus besoin)
+
+1. `unique_ptr`
+permet de garantir que le propriétaire d'une  zone mémoire est unique, i.e. il ne peut y avoir qu'un seul `unique_ptr` qui pointe sur une zone mémoire; ne peut pas être copié, mais peut être déplacé grâce à la move semantic
+
+déclaration:
+```
+unique_ptr<type> identificateur(new type(valeur));
+```
+`identificateur` est le nom du `unique_ptr`, `type` le type sur lequel il pointe et `valeur` la valeur d'initialisation
+
+il est possible de libérer un `unique_ptr` avant que cela ne soit fait automatiquement grâce à la fonction spécifique `reset()`; après l'appel à cette fonction, l'adresse est stockée dans le `unique_ptr` vaut `nullptr`
+
+```
+#include <memory>
+//...
+unique_ptr<int> px(new int(20));
+//...
+```
+les `unique_ptr` ne conviennent pas à toutes les situations; en particulier lorsque les zones mémoire doivent être partagées par différents pointeurs; ce sont les `shared_ptr` qui sont destinés à cet usage
+
+2. `shared_ptr`
+
+la libération de la zone pointée est aussi automatique, a lieu lorsque tous les `shared_ptr` qui pointaient sur une zone mémoire ne pointent plus vers celle-ci ou ont été supprimés; il peut arriver qu'il y ait un problème de dépendance cyclique entre plusieurs zones de code contenant des `shared_ptr` sur la même zone mémoire, il serait donc impossible de libérer cette zone
+
+3. `weak_ptr`
+
+les `weak_ptr` permettent de casser cette dépendance cyclique et donc libérer cette zone mémoire
+
+c'est surtout le `unique_ptr` qui est à retenir et permet une utilisation simplifiée par rapport aux pointeurs "à la C"
+
