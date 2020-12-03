@@ -601,15 +601,159 @@ Classe& Classe::operator=(Classe source)    // passage par valeur !!!
 }
 ```
 
+##### Héritage: concepts
+
+l'héritage permet de regrouper des caractéristiques communes dans une super-classe dont héritent les sous-classes qui en sont des versions enrichies, étendues; cet outil permet de définir une relation "est-un"
+
+une sous-classe est dite enrichie par des attributs et des méthodes supplémentaires, et spécialisée si elle redéfinit des méthodes héritées de C
+
+l'héritage permet d'organiser et de clarifier le code en explicitant les relations structurelles entre des classes, tout en limitant la redondance de code
+
+l'héritage ne doit pas être une relation "possède-un": ce lien doit être établi par l'encapsulation par le fait de déclarer un attribut 
+
+transitivité: l'héritage est transitif, i.e. si une super-classe hérite d'une super-super-classe, alors la sous-classe possède également tous les attributs et méthodes de cette dernière
+
+ces relations "est-un" définissent une hiérarchie de classe entre les classes les plus générales, classes parentes en haut et classes enfant spécialisées et enrichies en bas
+
+syntaxe pour faire hériter d'une super-classe
+
 ```
+class NomSousClasse: public NomSuperClasse{
+  // déclaration de méthodes et attributs spécifiques à la sous-classe 
+  // ...
+};
 ```
+
+##### Héritage: droit protégé
+
+dans une relation d'héritage, la sous-classe dispose aussi des membres privés de la super-classe mais n'y a pas accès (le droit d'accès privé limite la visibilité à l'enceinte de la classe)
+
+il existe un autre type d'accès au sein d'une hiérarchie de classe, le droit d'accès protégé (mot-clé `protected`): assure la visibilité des membres d'une classe dans toutes les classes de la descendance; extension du niveau privé qui accorde des droits d'accès privilégiés uniquement aux sous-classes (restent privés à tout autre endroit du code)
+
+un membre protégé est uniquement accessible dans les sous-classes dans leur propre portée
+
+la portée de classe permet de manipuler directement tous les attributs et méthodes de quelconque instance d'une classe (courante ou non) au sein de la définition; e.g. si une classe `B` admet un attribut privé `b`, alors on peut accéder dans les méthodes de `B` au `b` de l'instance courante (`this->b`) mais également d'une autre instance `autreB` passée en paramètre (`autreB.b`); ainsi `b` est accessible dans la classe `B` à travers tout type d'objet de type `B` (i.e. `b` est de portée `B`)
+
+accès possible d'une classe `B` à l'attribut protégé `a` de la super-classe `A` mais uniquement dans sa portée; un attribut privé de `A` n'est pas accessible en dehors de la super-classe; au sein de `B`, on peut accéder au `a` protégé de l'instance courante ou d'une autre instance `autreB` de la même classe, mais pas à celui d'une autre classe comme A (il s'agirait d'un accès externe à un attribut protégé, interdit), exemple:
 ```
+class A
+{
+  protected: int a;
+  private: int prive;
+};
+class B: public A
+{
+  public: 
+  //...
+     void f(B autreB, A autreA, int x)
+     {
+       a = x;  // ok A::a est protected -> accès possible
+       prive = x; // ERREUR ! A::prive est private
+       a += autreB.prive; // ERREUR ! même raison
+       a += autreB.a; // ok même portée (B::)
+       a += autreA.a; // INTERDIT this n'est pas de la même portée que autreA
+     }
+};
 ```
+en conclusion:
+* les membres publics sont accessibles à tous les utilisateurs d'une classe
+* les membres privés sont accessibles qu'au programmeur de la classe
+* les membres protégés sont accessibles à tous les programmeurs d'extension par sous-classes
+
+##### Héritage: masquage
+
+spécialiser en redéfinissant les méthodes de la super-classe 
+
+situation de masquage: un appel à la méthode par cette sous-classe renverra à la version spécialisée, qui l'emporte sur la version héritée de la super-classe; masquage = partage d'un même nom d'attribut ou de méthode sur plusieurs niveaux d'une hiérarchie de classe 
+
+pour les attributs, masquage souvent source de confusion: nommer un attribut par le même nom (pas forcément le même type) qu'un attribut hérité, qui masquera ce dernier
+
+pour les méthodes, masquage courant, permet de les spécialiser; la méthode héritée est dite méthode générale, appelée par les sous-classes qui ne la masquent pas; la méthode spécifique à la sous-classe est dite méthode spécialisée
+
+un objet dont un des membres est spécialisé dispose également du membre hérité même s'il est masqué; on utilise l'opérateur de résolution de portée pour y avoir accès; syntaxe:
+
+```
+NomSuperClasse::méthode // ou ::attribut
+```
+
+##### Héritage: constructeurs - partie 1
+
+l'instanciation d'une classe s'accompagne d'une initialisation des attributs; cette tâche ne peut plus être prise en charge par le constructeur d'une sous-classe: celle-ci hérite des attributs, parfois privés, d'une super-classe qu'elle ne peut pas initialiser; l'initialisation des attributs hérités doit se faire dans la classe où ils sont explicitement définis: chaque constructeur de la sous-classe fait donc appel à un constructeur de la super-classe
+
+l'appel au constructeur de la super-classe depuis le constructeur de la sous-classe se fait dans la liste d'initialisation (ou section deux points); syntaxe:
+
+```
+SousClasse(liste de paramètres): SuperClasse(arguments), Attribut1(valeur1), ... 
+{ 
+  // corps du constructeur}
+}
+```
+le constructeur de la super-classe porte son nom et est placé au début de la section d'appel aux constructeurs des attributs
+
+exemple:
+```
+class FigureGeometrique
+{
+  protected: Position position;
+  public:
+    FigureGeometrique(double x, double y): position(x,y){}   // constructeur
+    //...
+};
+class Rectangle: public FigureGeometrique
+{
+  protected: double largeur; double hauteur;
+  public:
+    Rectangle(double x, double y, double l, double h): FigureGeometrique(x,y), largeur(l), hauteur(h){}  // constructeur de la sous-classe qui appelle constructeur de la super-classe
+    //...
+};
+// il n'est pas nécessaire qu'une sous-classe définisse des attributs supplémentaires:
+class Carre: public Rectangle{
+  public:
+    Carre(double taille): Rectangle(taille, taille){}
+};
+```
+
+un appel explicite au constructeur de la super-classe n'est pas nécessaire si cette dernière possède un constructeur par défaut (l'appel est alors effectué par le compilateur); si la classe n'a pas de constructeur par défaut, l'appel doit être explicite
+
+rappel: le constructeur par défaut, qui ne prend pas d'arguments, existe par défaut si la classe n'a pas de constructeur, mais disparait et doit être réécrit dès la création d'un constructeur
+
+il est conseillé de toujours déclarer au moins un constructeur pour chaque classe et d'effectuer un appel explicite à un constructeur de la super-classe, même à celui par défaut
+
+
+##### Héritage: constructeurs - partie 2
+
+ordre d'appel des constructeurs: la construction d'une sous-classe appelle d'abord le constructeur de la super-classe la plus générale, puis, dans l'ordre, les constructeurs des super-classes qui en héritent, avant de terminer par l'initialisation de la partie spécifique de la classe instanciée
+
+les destructeurs sont appelés dans l'ordre inverse des constructeurs
+
+constructeurs de copie: une redéfinition du constructeur de copies d'une sous-classe s'accompagne toujours d'un appel explicite au constructeur de copies de la super-classe; sinon, son constructeur par défaut est appelé et la copie est souvent mal réalisée
+
+```
+Rectangle(Rectangle const& autre): FigureGeometrique(autre), largeur(autre.largeur), hauteur(autre.hauteur) {}
+```
+
+en appelant comme ci-dessus le constructeur de copie de `FigureGeometrique` avec l'instance copiée en argument (étant `Rectangle`, elle est aussi une `FigureGeometrique`), l'attribut propre à cette super-classe, la position, sera copiée dans la nouvelle instance ; si l'on n'avait spécifié, dans le constructeur de copie de `Rectangle`, que les valeurs des attributs spécifiques à `Rectangle`, sans appeler le constructeur de copie `FigureGeometrique`, alors un appel implicite sera fait à son constructeur par défaut
+
+héritage des constructeurs: les constructeurs ne sont pas hérités dans une relation d'héritage; mais depuis C++11, il est possible de demander à ce qu'ils le soient:
+
+```
+using SuperClasse::SuperClasse;
+```
+
+ceci force l'héritage de tous les constructeurs de la super-classe de sorte que la sous-classe peut être construite avec les mêmes arguments; il s'agit d'une pratique peu recommandée puisque les constructeurs de la super-classe n'itialisent pas les attributs de la sous-classe: on limitera son utilisation, si nécessaire, à des sous-classes qui n'ont pas de nouvel attribut
+
+##### Copie profonde
+
+copie de surface: des constructeurs et destructeurs par défaut sont fournis par le compilateur s'ils ne sont pas définis; le constructeur de copie par défaut effectue une copie de surface qui consiste à copier membre à membre la valeur de chaque attribut; cette copie est d'ordinaire suffisante, mais elle peut poser problème notamment quand des attributs sont des pointeurs
+
+copie profonde: dans des situations où les attributs sont des pointeurs, le constructeur de copie doit être redéfini pour réaliser une copie profonde qui ne copie pas les adresses mais duplique les zones pointées; les attributs d'un objet copié devraient pointer vers des variables à même valeur mais stockées dans des zones mémoires distinctes de l'objet d'origine; cette indépendance implique que la manipulation de l'objet copié (et notamment sa destruction), n'a plus aucune incidence sur l'objet d'origine
+
+pour les mêmes raisons si une classe contient des pointeurs, il est parfois important de redéfinir d'une façon similaire, l'opérateur d'affectation `=`: sa version par défaut effectue aussi une copie de surface (ne pas oublier de considérer également le destructeur)
+
 ```
 ```
 ```
 
-```
 ```
 ```
 ```
