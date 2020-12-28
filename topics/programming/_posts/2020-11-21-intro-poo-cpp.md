@@ -750,21 +750,231 @@ copie profonde: dans des situations où les attributs sont des pointeurs, le con
 
 pour les mêmes raisons si une classe contient des pointeurs, il est parfois important de redéfinir d'une façon similaire, l'opérateur d'affectation `=`: sa version par défaut effectue aussi une copie de surface (ne pas oublier de considérer également le destructeur)
 
-```
-```
-```
+
+##### Polymorphisme et résolution dynamique des liens
+
+le polymorphisme permet à un même code de s'adapter à aux types des données auxquelles il s'applique; rend le code générique, écrit de façon unifiée pour différents types de données
+
+dans une hiérarchie de classe, le type est hérité: on dit qu'une instance de la sous-classe est aussi une instance de la super-classe, et cette relation est transitive
+
+l'héritage de type s'applique dans le cadre de l'affectation, mais aussi du passage des arguments
+
+en C++, par défaut, le type de la variable détermine la méthode à appeler = résolution statique des liens: le choix de la méthode se fait statiquement avant l'exécution
+
+le polymorphisme fait que, lors d'affectations ou de passages d'arguments, des instances d'une sous-classe soient substituables aux instances de leurs super-classes tout en gardant leurs propriétés propres; la méthode à invoquer est choisie pendant l'exécution, en fonction de la nature réelle des instances = résolution dynamique des liens
+
+pour avoir recours à la résolution dynamique des liens, il faut réunir les 2 conditions suivantes
+1. les méthodes concernées doivent être déclarées comme virtuelles
+2. elles doivent s'exercer sur les instances réellement concernées grâce à des références ou des pointeurs 
+
+##### Polymorphisme: méthodes virtuelles
+
+les méthodes virtuelles permettent la résolution dynamique des liens, au travers de références ou de pointeurs; ainsi le choix de la méthode se fait en fonction du type réel de l'instance
+
+une méthode à résoudre dynamiquement doit être déclarée comme virtuelle, en précédant son prototype de `virtual`
+
+toute spécialisation d'une méthode virtuelle dans une sous-classe est aussi virtuelle par transitivité, même sans spécifier le mot-clé `virtual`
+
+pour activer la résolution dynamique des liens il est également essentiel que le passage des arguments des méthodes virtuelles soit fait par le biais de références ou de pointeurs: elles opèrent ainsi sur les instances réelles (si le passage se faisait par valeur, le polymorphsime serait impossible car lors de l'appel l'objet serait copié dans une variable du type de la super-classe, en perdant ses spécificités)
+
+pour éviter qu'une destruction d'un objet en soit que partielle, il est conseiller de toujours déclarer les destructeurs comme virtuels
+
+au contraire, puisqu'un constructeur est chargé d'initialiser l'instance courante, il ne peut pas être virtuel; s'il appelle dans son corps des méthodes virtuelles, la virtualité de ces méthodes est ignorée
+
+##### Masquage, substitution et surcharge
+
+surcharge = quand des fonctions ou des méthodes dans la même portée portent le même nom mais se distinguent par des paramètres différents
+
+masquage de méthodes = lorsque des méthodes de portée différente ont le même nom; celles dont la portée est la plus proche masquent les plus lointaines, indépendamment de leurs paramètres; il suffit d'une méthode avec le même nom pour masquer plusieurs méthodes surchargées dans une autre portée
+
+subtitution de méthodes virtuelles = redéfinition d'une méthode virtuelle héritée d'une super-classe, dans le but de résoudre dynamiquement des liens; la substitution d'une seule méthode virtuelle, même avec des paramètres différents, masque toutes les autres qui portent le même nom 
+
+depuis C++11, deux mots-clés placés après le prototype pour mieux spécifier redéfinitions ou surcharges:
+* `override`: indique que l'on redéfinit une méthode virtuelle héritée d'une super-classe (le compilateur vérifie qu'il s'agit bien d'une substitution de méthode virtuelle; si aucun prototype identique n'existe, il signale une erreur; constitue donc une protection contre les erreurs)
+* `final`: empêche toute substitution future de la méthode dans les sous-classes; peut également interdire la création de sous-classes d'une classe en le plaçant après le nom de la classe dans son prototype
+
+##### Classes abstraites
+
+au niveau le plus élevé de la classe, il est parfois impossible de définir une méthode générale qui devra pourtant exister dans toutes les sous-classes
+
+méthode virutelle pure = méthode abstraite = méthode qui doit exister et être redéfinie dans toutes les sous-classes que l'on souhaite instancier sans qu'il soit nécessaire de la définir dans la super-classe; la super-classe ne donne souvent que son prototype sans la définir explicitement; signalée en ajoutant `=0` à la fin de son prototype
 
 ```
-```
-```
-```
-```
-```
-```
+virtual Type nom_methode(liste paramètres) = 0;
 ```
 
+une telle méthode peut être appelée au niveau de la super-classe
 
+```
+classe FigureFermee
+{
+  public:
+    virtual double surface() const =0;
+    virtual double perimetre() const =0;
+    
+    //une méthode virtuelle pure peut être appelée dans la super-classe 
+    double volume(double hauteur) const 
+    {
+      return hauteur*surface();
+    }
+};
+```
+classe abstraite = classe qui contient au moins une méthode virtuelle pure et qui ne peut pas être instanciée; toute sous-classe héritant d'une classe abstraite l'est aussi tant qu'elle ne redéfinit pas toutes ses classes virtuelles pures héritées
 
+les classes abstraites sont idéales pour construire la racine des arbres d'héritage; grâce à l'outil des méthodes virtuelles pures, le polymorphisme complète l'abstraction; elles permettent de définir des concepts génériques communs à toutes les sous-classes mais trop abstraits pour être codés à haut niveau
+
+##### Collections hétérogènes
+
+collections hétérogènes = ensemble d'objets d'une même super-classe mais traités de façon polymorphique, spécifique; sont une application importante du polymorphisme
+
+pour permettre la résolution dynamique des liens il faut utiliser une méthode virtuelle et accéder aux instances par le biais de pointeurs ou références; lorsque c'est possible il est conseillé d'utiliser des références; cependant, on ne peut pas réaliser des tableaux de références; dans le cadre d'une collection hétérogène, on utilise donc un tableau de pointeurs vers des instances de la super-classe
+
+il est important de passer les éléments du tableau par référence: les `unique_ptr` ne peuvent pas être copiés; dans le cas contraire, plusieurs pointeurs partageraient la même zone mémoire; si la valeur n'est pas modifiée, on peut utiliser une référence constante
+
+pour garantir l'intégrité d'une collection hétérogène, la durée de vie des éléments pointés doit être au moins aussi longue que celle des pointeurs
+
+l'allocation dynamique est l'outil qui permet de préserver la zone mémoire allouée aussi longtemps que la collection qui la contient; grâce à l'utilisatio du mot-clé `new`, la zone mémoire nouvellement allouée existe jusqu'à l'emploi du mot `delete`; dans une collection d'`unique_ptr`, la désallocation sera faite automatiquement (recommandé de les favoriser par rapport aux pointeurs à la C); les `unique_ptr` permettent également d'assurer qu'un objet n'est pointé que par un pointeur à la fois, ce qui limite les erreurs de manipulation
+
+la question de l'intégrité des données se pose également avec l'emploi de pointeurs dans une classe: il faut garantir la durée de vie des données pointées aussi longtemps que la classe qui les exploite (autant pour les pointeurs intelligents que pour les pointeurs à la C); d'autres problèmes se posent avec les pointeurs à la C: la désallocation et le partage de données entre collections. Selon la conception de la classe, il est souvent nécessaire de redéfinir des outils qui le permettent, comme le constructeur de copie, le destructeur et l'opérateur d'affectation
+
+désallocation: contrairement aux pointeurs intelligents, les pointeurs à la C doivent être manuellement désalloués
+
+une copie de surface des pointeurs fait pointer plusieurs instances vers les mêmes entités et expose souvent à des erreurs de manipulation; avec `unique_ptr` la question ne se pose pas: la copie est interdite puisque ces pointeurs ne peuvent pas partager une zone mémoire; lorsqu'on utilise des pointeurs à la C, il faut s'interroger sur la nécessité de redéfinir le constructeur de copie
+
+##### Héritage multiple
+
+rappel: les notions principales de la POO
+* l'encapsulation et abstraction = regrouper des données et traitements en une seule et même entité, séparer l'interface d'utilisation des détails de manipulation
+* l'abstraction = établit une relation "est-un" entre différentes classes, permet le polymorphisme d'inclusion
+* le polymorphisme = nécessite l'emploi de méthodes virtuelles au travers de références ou pointeurs, induit une adaptation de l'exécution selon le type de données traitées
+
+héritage multiple = extension de l'héritage simple; une sous-classe peut hériter directement de plusieurs classes parentes; une sous-classe va hériter du type, des attributs et des méthodes (hormis constructeurs et destructeurs) de toutes ses super-classes
+
+pour déclarer une relation d'héritage multiple, on indique l'ensemble des super-classes dont hérite une sous-classe dans sa déclaration, séparées par des virgules; attention: l'ordre de déclaration des liens d'héritage joue un rôle important dans la destruction et la destruction d'une instance !
+
+```
+class Sous-Classe: public SuperClass1, ..., public SuperClasseN
+{
+  //...
+};
+```
+
+de façon analogue à l'héritage simple, l'initialisation d'attributs hérités se fait dans la liste d'initialisation du constructeur de la sous-classe, par appel aux constructeurs des classes parentes
+
+si une super-classe adment un constructeur par défaut, une invocation explicite n'est pas obligatoire, mais recommandée pour éviter tout oubli
+
+attention: dans un contexte d'héritage multiple, l'ordre d'appel des constructeurs parents n'est pas donné par la liste d'initialisation du constructeur de la sous-classe mais par l'ordre de la déclaration de l'héritage; l'ordre d'appel des destructeurs se fait toujours dans l'ordre inverse de l'appel des constructeurs
+
+la plupart des compilateurs donneront un message d'alerte lorsque la liste d'initialisation ne respecte pas l'ordre des liens d'héritage 
+
+##### Héritage multiple: masquage
+
+dans l'héritage mulitple les droits d'accès s'appliquent comme dans une relation d'héritage simple: une sous-classe peut directement accéder aux membres publics et protégés de ses super-classes; des situations d'ambiguïté surviennent lorsque plusieurs super-classes contiennent un membre portant le même nom
+
+dans l'exemple ci-dessous, invoquer la méthode `afficher()` d'une instance `Ovovivipare` provoquera une erreur de compilation due à un problème de résolution de portée; il s'agit en effet d'une situation de masquage, qui pose souci même si les méthodes héritées prennent des paramètres différents; la portée des méthodes étant différente, il ne s'agit pas d'une situation de surcharge !
+
+```
+classe Ovipare
+{
+  // ...
+  void afficher() const;
+};
+classe Viviapre
+{
+  // ...
+  void afficher(string const& entete) const;
+};
+class Ovovivipare: public Ovipare, public Vivipare
+{
+  //...
+};
+int main()
+{
+  Ovovivipare o(...);
+  o.afficher("un orvet");
+  return 0;
+}
+```
+
+solutions possibles à ce problème:
+1. lever l'ambiguïté par l'opérateur de résolution de portée qui indique au compilateur la classe dont on appelle la méthode; cette solution est déconseillée car elle délègue à l'utilisateur externe le choix de comment afficher un objet de cette classe 
+2. ajouter dans la super-classe une déclaration spéciale explicitant quelle méthode héritée sera invoquée lors d'un appel ambigu, avec la syntaxe:
+```
+using SuperClasse::nomMethodeouAttributAmbigu;
+```
+attention: pas de parenthèses ni type de retour; cette déclaration ne donne que le nom du membre concerné
+3. clarifier en définissant proprement une méthode au sein de la sous-classe, par exemple
+```
+class Ovovivipare: public Ovipare, public Vivipare
+{
+  //...
+  public:
+    void afficher() const
+    {
+      Ovipare::afficher();
+      Vivipare::afficher("mais aussi pour sa partie vivipare");
+    }
+};
+```
+##### Classes virtuelles 
+
+dans certaines situations d'héritage multiple, une sous-classe hérite plusieurs fois, indirectement, d'une même classe parente, ce qui peut s'avérer problématique (e.g. `iostream` qui hérite des classes `ostream` et `istream`, super-classes qui héritent elles-mêmes toutes deux de la casse ` ios`)
+
+pour éviter la duplication des attributs d'une super-classe plusieurs fois incluses lors d'héritages multiples, il faut déclarer son lien d'héritage avec toutes ses sous-classes comme virtuel; une telle super-super-classe est appelée super-classe virtuelle 
+
+attention! différence entre classe abstraite et classe virtuelle: une classe abstraite est une classe avec des méthodes virtuelles pures; une classe virtuelle a un lien d'héritage virtuel vers ses sous-classes
+
+signaler un héritage virtuel se fait lors de la déclaration du lien d'héritage 
+
+```
+class SousClasse: public virtual SuperClassVirtuelle
+{
+//...
+};
+```
+
+c'est la classe pouvant être héritée plusieurs fois qui est virtuelle et non pas directement les classes utilisées dans l'héritage multiple; l'héritage virtuel établit donc une dépendance au niveau de l'implémentation entre différents niveaux d'héritage, raison pour laquelle certains langages refusent l'héritage multiple
+
+dans un héritage simple, le constructeur d'une sous-classe ne fait appel qu'aux constructeurs de ses super-classes direces; mais dans un contexte d'héritage virtuel, le constructeur de la super-super-classe virtuelle doit être explicitement appelé par les constructeurs des sous-classes instanciables qui initialisent ainsi l'unique jeu d'attributs hérité de la classe virtuelle. Par la suite, les appels au constructeur de la super-classe virtuelle par le constructeur des classes intermédiaires sont ignorés; exemple:
+
+```
+Ovovivipare::Ovovivipare(//...): Animal(nom, habitat, regime), Ovipare(nb_oeufs), Vivipare(gestation), espece_rare(rarete){}
+```
+
+le constructeur appelle directement le constructeur de la super-super-classe virtuelle `Animal` pour initialiser son unique objet `Animal` hérité; ensuite appel aux super-classes directes `Ovipare` et `Vivipare`, dans leur constructeur, l'appel à la classe virtuelle est alors ignoré; enfin le constructeur d'`Ovovivipare` peut initialisé ses propres attributs 
+
+dans le cas où la super-classe virtuelle a un constructeur par défaut,  il n'est pas nécessaire d'expliciter l'appel à ce dernier mais il sera toujours effectué dès la création de l'instance la plus dérivée
+
+l'ordre d'appel des constructeurs de copie vérifie aussi ces règles
+
+##### Etude de cas
+
+le verbe avoir souligne une relation d'encapsulation
+le verbe être signifie une relation d'héritage 
+varier selon indique l'emploi du polymorphisme 
+
+puisqu'une méthode polymorphique s'adapte à la nature de l'instance traitée, les valeurs qu'elle utilise doivent le faire également (utilisation de pointeurs ou références) 
+
+un bon réflexe à adopter lors de l'introduction d'une méthode virtuelle est de rendre aussi le destructeur virtuel; ainsi on s'assure que sa descendance est correctement détruite
+
+pour rendre une classe abstraite, il faut lui donner une méthode virtuelle pure: en créer une pour cette seule raison est dénué de sens, on préférera donner cette caractéristique au destructeur, qui existe automatiquement dans chaque classe; il est impératif de doter tout destructeur d'un corps et toute méthode virtuelle pure peut avoir un corps à condition qu'il soit externalisé
+
+pour éviter qu'une sous-classe possède plusieurs fois un même attribut, utiliser un lien d'héritage virtuel; les liens d'héritage virtuels ont une incidence sur la construction qui doit en premier lieu appeler le constructeur de la classe virtuelle
+
+par défaut, le constructeur de copie réalise une copie de surface, qui copie leur valeur, c'est-à-dire l'adresse de l'élément pointé, dans une autre instance; de plus, les copies ne sont pas possibles pour les `unique_ptr`; il faut dans certains cas donc réaliser une copie profonde, qui consiste à copier les objets pointés et non leur adresse
+
+copie polymorphique = copie qui conserve la nature des instances
+
+redéfinition de l'opérateur d'affectation: retourner une référence sur l'instance courante permet d'enchainer plusieurs affectations, ex:
+
+```
+Montre& operator=(Montre source)
+{
+  swap(coeur, source.coeur);
+  swap(accessoires, source.accessoires);
+  return *this;
+}
+```
 
 
 
