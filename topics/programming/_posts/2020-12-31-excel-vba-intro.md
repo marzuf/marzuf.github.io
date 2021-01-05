@@ -964,20 +964,210 @@ End Sub
 ```
 
 La sous-routine ne retourne rien du tout directement et elle ne peut donc pas être utilisée directement dans une feuille de calculs à la manière d'une fonction.
+Est utile pour éviter d'écrire plusieurs fois la même chose. Les sous-routines permettent de décomposer un gros code en plusieurs portions.
+
+Exemple d'une sous-routine:
+
+```
+Sub affichage_prenom(prenom)
+MsgBox "Votre prénom est : " & prenom
+End Sub
+```
+Une sous-routine peut être appelée dans une procédure. La sous-routine peut être appelée comme une fonction en affichant son nom puis les paramètres si elle en prend entre
+parenthèses. Mais on peut aussi utiliser le mot-clé `Call` (celui-ci permet de voir que c'est une sous-routine et qu'elle ne renvoie rien).
+
+```
+' Ces deux lignes font la même chose
+Call ma_sous_routine(parametre)
+ma_sous_routine(parametre)
+```
+Exemple d'utilisation de la sous-routine
+
+```
+Sub test()
+' On crée une variable prénom et on lui attribue une valeur
+Dim prenom As String
+prenom = "Baptiste"
+' On utilise notre sous-routine pour afficher le prénom
+affichage_prenom (prenom)
+' On crée une variable âge ayant pour valeur 20
+Dim age As Byte
+age = 20
+' On réutilise la sous-routine pour montrer que malgré le code entre les deux,
+' la sous-routine continue de faire la même chose.
+affichage_prenom (prenom)
+End Sub
+```
+
+La variable envoyée à la sous-routine ne doit pas forcément être la même que le nom de la variable utilisée dans la sous-routine. on peut très bien faire ça :
+
+```
+' On utilise toujours la même sous-routine avec la variable prenom
+Sub test()
+Dim pseudo As String
+pseudo = "Baptiste"
+affichage_prenom (pseudo)
+Dim age As Byte
+age = 20
+affichage_prenom (pseudo)
+End Sub
+```
+
+VBA vous permet de définir vos fonctions ou sous-routines privées ou publiques à l'aide des mots-clés Private ou Public. 
+
+Par défaut, VBA les créées en publiques. Le fait qu'une fonction ou sous-routine soit publique permet à cette procédure d'être accessible dans tous les modules de l'application. De plus, elles feront partie de la liste des macros que l'on peut attribuer sur une feuille de calcul.
+
+Pour les procédures privées, il suffit de mettre le mot-clé `Private` devant la déclaration de fonction ou sous-routine. Ainsi, on peut avoir des procédures qui ont le même nom dans des modules différents et qui exécutent un code différent. Ces fonctions privées ne peuvent être utilisées par un utilisateur dans la feuille de calcul. C'est le même système que pour les variables locales ou globales.
+
+```
+Private Sub sous_routine_privee()
+End Sub
+```
 
 
+Quand on déclare des procédures avec des paramètres, par défaut, il sont de types `Variant`. Mais on peut attribuer un autre type de données à ces paramètres
+
 ```
+Function afficher_resultat(resultat As Integer)
 ```
+Avantage à déclarer des types de données : introduire une discipline dans le code car la procédure recherche un certain type d'informations. Avec le type par défaut, Variant, la procédure accepte n'importe quoi. Si on spécifie que le paramètre est une chaîne de caractères, une erreur se produira si ce n'est pas une chaîne de caractères qui est passée en paramètre.
+
+
+On peut rendre certains arguments optionnels en utilisant le mot-clé `Optional`.
 ```
+Function test(parametre1 As Byte, Optional parametre2 As Byte)
 ```
+Cette fonction demande un paramètre obligatoire de type `Byte` qui est `parametre1` et un paramètre optionnel de type `Byte` qui est `parametre2`. 
+
+Un paramètre optionnel doit être énoncé APRÈS les paramètres obligatoires.
+
+On peut envoyer à une fonction une
+variable de deux façon différentes. Soit on envoie la variable elle-même, soit une copie.
+
+Pour envoyer une variable dans une fonction ou sous-routine, sans modifier ce nombre, on peut envoyer une copie de la variable à la fonction.
+Se fait en utilisant le mot-clé `ByVal`. De ce fait, la valeur réelle de la variable n'est pas modifiée. 
+
+Si on utilise le mot-clé `ByRef`, on envoie la référence de la variable (l'adresse), la sous-routine peut alors accéder à la
+vraie valeur et la modifier. Dans ce cas, la variable est modifiée même dans la procédure qui appelle la sous-routine ou la fonction.
+Par défaut, les arguments sont passés par référence.
 ```
+' Passe la référence en argument.
+Sub MaProcedure_1(ByRef x As Integer)
+x = x * 2
+End Sub
+' Passe la valeur en argument.
+Sub MaProcedure_2(ByVal y As Integer)
+y = y * 2
+End Sub
+' ByRef est la valeur par défaut si non spécifiée.
+Sub MaProcedure_3(z As Integer)
+z = z * 2
+End Sub
+Sub Test()
+' On utilise une variable pour la faire changer
+Dim nombre_a_change As Integer
+nombre_a_change = 50
+' On applique à notre variable la première sous-routine
+MaProcedure_1 nombre_a_change
+MsgBox nombre_a_change
+' On applique à notre variable la deuxième sous-routine
+MaProcedure_2 nombre_a_change
+MsgBox nombre_a_change
+' On applique à notre variable la troisième sous-routine
+MaProcedure_3 nombre_a_change
+MsgBox nombre_a_change
+End Sub
 ```
+Étant donné que la variable est passée grâce à la référence, la variable est modifiée dans la sous-routine mais aussi dans la procédure qui appelait la sous-routine.
+Dans un second temps, on applique la deuxième sous-routine. Dans celle-ci, on envoie une copie de la valeur. Elle fait le même calcul mais avec une copie. 
+Enfin, dans la troisième, aucun mot-clé n'est utilisé. Par défaut nous envoyons la référence et donc la vraie valeur à la sous-routine. Celle-ci effectue donc le même calcul et modifie la variable de la procédure appelante.
+
+
+
+Les boîtes de dialogue usuelles: `MsgBox` et `InputBox` (qui permet de récupérer des informations)
+
 ```
+MsgBox (Prompt, [Buttons] As VbMsgBoxStyle = vbOkOnly, [title],
+[helpfile], [context]) As VbMsgBoxResult
 ```
+
+La fonction peut prendre jusqu'à 5 paramètres. Le `As` permet de préciser le type de valeur qu'il faut indiquer ou que la fonction
+retourne.
+
+Dans une MsgBox à trois boutons, c'est bien la valeur de retour (stockée dans une variable)
+qui permettra de savoir où a cliqué l'utilisateur et d'agir en conséquence ! 
+MsgBox() retourne un Long, c'est-à-dire un entier.
 ```
+Sub maBoite()
+Dim retour As Long
+retour = MsgBox ( Prompt := " Je suis un Zér0 !" )
+End Sub
 ```
+`:=` permet d'indiquer le paramètre auquel nous attribuons une valeur
+
+La syntaxe suivante est tout aussi correcte :
 ```
+retour = MsgBox ( " Je suis un Zér0 !" )
 ```
+`prompt` est le seul paramètre obligatoire, il attend une chaîne de caractères (`String`) et représente le message qui sera affiché dans la boîte.
+
+
+Le paramètre `buttons` n'est pas obligatoire. A la place, il faut mettre une constante du type `VbMsgBox`. Par défaut, VBA applique la constante `vbOkOnly`, ce qui veut dire que par défaut, toutes vos `MsgBox` auront un bouton Ok. VBA met à disposition plusieurs constantes, à appeler par leur nom (`vbOkOnly`, `vbOkCancel`, `vbYesNoCancel`, `vbYesNo`) ou par leur valeur numérique (0, 1, 2, 3; respectivement).
+
+Par exemple, pour créer une `MsgBox` qui affiche " Salut ! " et qui propose comme boutons " Ok " et " Annuler " :
+```
+retour = MsgBox ( Prompt := " Salut ! ", Buttons := vbOkCancel)
+```
+ou encore :
+```
+retour = MsgBox (" Salut ! ", 1)
+```
+La première solution, plus explicite, est à préférer.
+
+
+Programmation événementielle: exécuter tel ou tel bloc d'instructions en fonction du signal reçu par le programme - signal généralement émis par l'utilisateur.
+
+La valeur renvoyée par `MsgBox` dépend du bouton pressé par l'utilisateur.
+
+Bouton -> Constante de retour -> Valeur numérique retour
+OK -> `vbok` -> 1
+Annuler -> `vbCancel` -> 2
+Oui -> `vbYes` -> 6
+Non -> `vbNo` -> 7
+
+Exemple:
+```
+Sub questionVitale()
+Dim retour As Long
+' on crée une MsgBox "Oui - Non ":
+retour = MsgBox( Prompt := "Êtes-vous vraiment un Zér0 ?", Buttons
+:= vbYesNo )
+'Si on a cliqué sur Oui, on souhaite la bienvenue :
+If retour = vbYes Then
+MsgBox "Bienvenue !"
+'Sinon, on affiche un autre message moins amical :) :
+Else
+MsgBox "Ouste !"
+End If
+End Sub
+```
+
+`If retour = vbYes` peut être remplacé par `If retour = 6`, équivalent.
+
+La fonction `InputBox()` permet de créer une boîte de dialogue avec un champ de texte pour que
+l'utilisateur y saisisse quelque chose.  Prototype:
+```
+InputBox(Prompt, [Title], [Default], [XPos], [YPos], [HelpFile], [Context]) As String
+```
+La fonction renvoie un `String`, c'est-à-dire une chaîne de caractères. Que soit saisi un mot ou un nombre, il sera converti en `String`.
+
+Quelques fonctions d'Excel utiles:
+SOMME, PRODUIT, QUOTIENT, MOD, PGCD, SOMME.SI, SOMMEPROD, RACINE, PI, ARRONDI, ARRONDI.INF, ARRONDI.SUP, SI, ET, OU, SIERREUR, COLONNE, LIGNE, RECHERCHEV, RECHERCHEH, RECHERCHE, TRANSPOSE, MAX, MIN, MOYENNE, MEDIANE, ECARTYPE, FREQUENCE, NB, NBVAL, NB.VIDE, NB.SI, CONCATENER, EXACT, CHERCHE, DROITE, GAUCHE, MAJUSCULE, MINUSCULE, NOMPROPRE, NBCAR, REMPLACER
+
+Quelques fonctions Date et Heure:
+AUJOURDHUI, MAINTENANT, ANNEE, MOIS, JOUR, HEURE, MINUTE, SECONDE, JOURSE, NO.SEMAINE, DATE, NB.JOURS.OUVRES, SERIE.JOUR.OUVRE
+
+
 ```
 ```
 ```
