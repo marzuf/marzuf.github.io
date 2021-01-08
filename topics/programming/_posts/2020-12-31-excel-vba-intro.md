@@ -1168,24 +1168,1533 @@ Quelques fonctions Date et Heure:
 AUJOURDHUI, MAINTENANT, ANNEE, MOIS, JOUR, HEURE, MINUTE, SECONDE, JOURSE, NO.SEMAINE, DATE, NB.JOURS.OUVRES, SERIE.JOUR.OUVRE
 
 
+
+##### Retour de fonctions
+(source: https://docs.microsoft.com/fr-fr/dotnet/visual-basic/programming-guide/language-features/procedures/how-to-return-a-value-from-a-procedure)
+(source: https://docs.microsoft.com/fr-fr/dotnet/visual-basic/language-reference/statements/function-statement#returning-from-a-function)
+Pour retourner une valeur à partir d’une fonction, on peut affecter la valeur au nom de la fonction ou l’inclure dans une instruction `Return`.
+
+1) `Return` assigne simultanément la valeur de retour et quitte la fonction:
+```
+Function MyFunction(ByVal j As Integer) As Double
+    Return 3.87 * j
+End Function
+```
+
+2) À au moins un emplacement dans la `Function`, assigner une valeur au nom de la procédure. Quand on exécute `Exit Function End Function`, la dernière valeur assignée au nom de la procédure sera retournée. L’exemple suivant affecte la valeur de retour au nom de la fonction `myFunction`, puis utilise l' `Exit Function` instruction pour retourner.
+```
+Function MyFunction(ByVal j As Integer) As Double
+    MyFunction = 3.87 * j
+    Exit Function
+End Function
+```
+
+
+
+
+
+
+Les `Exit Function` et `Return <instructions>` provoquent une sortie immédiate d’une `Function`. Un nombre quelconque d'`Exit Function` et `Return <instructions>` peuvent apparaître n’importe où dans la procédure, et ces instructions peuvent être mélangées (mais on ne peut avoir qu'un seul `End Function`)
+
+Si on utilise `Exit Function` sans assigner de valeur au nom de la fonction, la procédure retourne la valeur par défaut pour le type de données spécifié comme `returntype`. Si `returntype` n’est pas spécifié, la procédure retourne `Nothing`, la valeur par défaut pour `Object`.
+
+
+Exemple: créer un damier coloré avec 1 case sur 2 grisée 
+(source: https://www.excel-pratique.com/fr/vba/boucles_suite)
+
+```
+Sub exerciceBoucles()
+    
+    Dim colonne As Integer, ligne As Integer
+    
+    'Boucle des lignes
+    For ligne = 1 To 10
+        
+        'Boucle des colonnes
+        For colonne = 1 To 10
+        
+            Cells(ligne, colonne) = (ligne - 1) * 10 + colonne
+            
+            'Coloration d'une cellule sur 2
+            If (ligne + colonne) Mod 2 = 0 Then 'Si le reste de la division par 2 = 0
+                Cells(ligne, colonne).Interior.Color = RGB(220, 220, 220)
+            End If
+            
+        Next
+        
+    Next
+    
+End Sub
+```
+
+Exemple: utilisation d'une variable pour sélectionner une cellule (`&` pour la concaténation !)
+(source: https://docs.microsoft.com/fr-fr/office/vba/library-reference/concepts/getting-started-with-vba-in-office)
+```
+Sub Macro1()
+    If Worksheets(1).Range("A1").Value = "Yes!" Then
+        Dim i As Integer
+        For i = 2 To 10
+            Worksheets(1).Range("A" & i).Value = "OK! " & i
+        Next i
+    Else
+        MsgBox "Put Yes! in cell A1"
+    End If
+End Sub
+```
+Exemple: supprimer des lignes vides dans une feuille de calcul Excel
+(source: https://docs.microsoft.com/fr-fr/office/vba/library-reference/concepts/getting-started-with-vba-in-office)
+```
+Sub DeleteEmptyRows()
+    SelectedRange = Selection.Rows.Count
+    ActiveCell.Offset(0, 0).Select
+    For i = 1 To SelectedRange
+        If ActiveCell.Value = "" Then
+            Selection.EntireRow.Delete
+        Else
+            ActiveCell.Offset(1, 0).Select
+        End If
+    Next i
+End Sub
+```
+
+##### Les objets Excel
+(source: https://www.lecompagnon.info/vba-excel/vba_objetsExcel.htm)
+
+Les cellules Excel sont des objets de la classe `Range`.
+
+* `Range("plage")` est un objet contenant la plage nommée... `plage` (accessible après avoir nommé cette plage dans Excel).
+* `Range("A1:H5")` est un objet contenant la plage `A1:H5`
+* `Evaluate("A1:H5")` ou `[A1:H5]` est équivalent exactement à `Range("A1:H5")`.
+* `Cells(3,5)` est un objet contenant la cellule `E5` (ligne 3, colonne 5).
+Attention ! `Cells` utilise l'adressage Ligne, Colonne, alors que Excel utilise Colonne, Ligne.
+* `Range("A1").Offset(3,5)` est un objet contenant la plage F4 soit un déplacement de 3 lignes et 5 colonnes à partir de `A1`.
+
+Ces deux dernières techniques peuvent être utilisées avec l'objet `Range` pour désigner des plages.
+
+* `Range(Cells(3,5), Range("A1").Offset(3,5))` est un objet contenant la plage `E3:F4`.
+
+L'utilisation d'un nom de plage au lieu d'une adresse permettra de déplacer la plage dans Excel sans devoir modifier la programmation VBA.
+Il est donc FORTEMENT suggéré de manipuler les lignes d'une liste de données ainsi:
+- Nommez la cellule de gauche de l'entête de liste.
+- Utilisez la notation `Range(nom).Offset(ligne,colonne)` pour représenter les champs de la liste.
+
+Pas de différence entre une plage et une cellule (une cellule est simplement une plage ne contenant qu'une cellule).
+`Range("A1:B9")` est un objet de la même classe que `Range("A1")` et possède donc les mêmes propriétés (dont les valeurs peuvent être différentes) et méthodes.
+
+Un objet `Range` est aussi une collection de cellules. Comme une cellule est un `Range` (d'une cellule), c'est une collection ne comptant qu'un objet.
+Un `Range` est donc une collection de collections.
+
+Certaines propriétés du modèle objet Excel contiennent des plages spécifiques:
+
+* `Cells` = Plage qui contient toutes les cellules d'une feuille:
+```
+    ActiveSheet.Cells
+    Sheets("Province").Cells
+```
+* `UsedRange` = Plage qui contient TOUTES les cellules occupées d'une feuille:
+```
+    ActiveSheet.UsedRange
+    Sheets("Province").UsedRange
+```
+* `CurrentRegion` = Plage continue (limitée par des lignes et des colonnes vides) dont fait partie la cellule:
+```
+    Range("Titre").CurrentRegion
+```
+* `Rows` = Collection des lignes d'une plage. Permet d'obtenir une ligne d'une plage:
+```
+    Range("ListeProvinces").Rows(1)
+    Range("Titre").CurrentRegion.Rows(1)
+```
+* `Columns` = Collection des colonnes d'une plage. Permet d'obtenir une colonne d'une plage:
+```
+    Range("ListeProvinces").Columns(1)
+    Range("Titre").CurrentRegion.Columns(1)
+```
+* `SpecialCells` = Plages spéciales d'une plage Excel:
+```
+    SpecialCells(xlCellTypeBlanks)  Cellules vides
+    SpecialCells(xlCellTypeConstants). Cellules contenant des constantes
+    SpecialCells(xlCellTypeFormulas). Cellules contenant des formules
+    SpecialCells(xlCellTypeLastCell). Dernière cellule dans la plage utilisée
+    SpecialCells(xlCellTypeVisible).Toutes les cellules visibles
+    ...
+```
+
+Quelques propriétés des objets `Range`:
+* `Column` 	Numéro de la colonne de gauche de la plage. `Range("B4:H6").Column` vaut 2
+* `Columns.Count` 	Nombre de colonnes de la plage. `Range("B4:H6").Columns.Count` vaut 7
+* `Row` 	Numéro de la ligne du haut de la plage
+* `Rows.Count` 	Nombre de lignes de la plage
+* `Count` 	Nombre de cellules de la plage
+* `CurrentRegion` 	Plage continue (limitée par des lignes et des colonnes vides) dont fait partie la cellule.
+* `End(xlDown)` 	Cellule de la dernière ligne à la fin de la zone qui contient la plage. Correspond aux touches Fin+Bas.
+* `End(xlToRight)` 	Cellule de la dernière colonne à la fin de la zone qui contient la plage. Correspond aux touches Fin+Droite.
+* `Text` 	Valeur AFFICHÉE de la cellule, donc évaluée et formatée.
+* `Value` 	Valeur ÉVALUÉE de la cellule.
+* `Worksheet` 	Objet `Worksheet` qui est la feuille qui contient la plage
+
+
+Les feuilles Excel sont des objets de la classe `Worksheet`.
+
+Elles sont regroupées dans la collection `Worksheets` et dans la collection `Sheets`.
+
+On peut manipuler une feuille de classeur par son nom:
+
+- `Worksheets("Provinces")` est la feuille nommée province.
+- `Sheets("Provinces")` est aussi la feuille nommée province.
+
+Différence: la collection `Sheets` contient aussi les objets `Chart` du classeur.
+
+Les classeurs Excel sont des objets de la classe `Workbook`.
+
+Tous les classeurs ouverts sont regroupés dans la collection `Workbooks`.
+
+- `Workbook("VBA Exemples.xls")` est le classeur VBA `Exemples.xls`
+
+La programme Excel lui-même, lorsque démarré, est un objet de la classe `Application`.
+
+Le classeur actif est: `Application.ActiveWorkbook` ou plus simplement `ActiveWorkbook`.
+
+Le classeur contenant le code VBA en cours d'exécution est: `Application.ThisWorkbook` ou plus simplement `ThisWorkbook`.
+
+La feuille active du classeur actif est: `Application.ActiveWorkbook.ActiveSheet` ou plus simplement `ActiveSheet`.
+
+La cellule active de la feuille active du classeur actif est: `Application.ActiveWorkbook.ActiveSheet.ActiveCell` ou plus simplement `ActiveCell`.
+
+La cellule active de la feuille nommée `Province` du classeur actif est: `Application.ActiveWorkbook.Worksheets("Province").ActiveCell` ou plus simplement `Worksheets("Province").ActiveCell`.
+
+L'objet `Selection` est l'objet passe-partout, qui contient ce qui est sélectionné dans le classeur Excel. Ce peut être une plage, un graphique, un tableau croisé ou n'importe quoi. L'utilisation de `Selection` en VBA est à éviter, puisqu'il risque fort de contenir une sélection inattendue lors de l'exécution du programme.
+
+La barre d'état de la fenêtre Excel est l'objet `StatusBar`.
+
+###### Méthodes Excel
+
+La plupart des opérations que l'utilisateur peut faire en Excel peuvent être programmées en VBA grâce aux méthodes des différents objets du modèle objet Excel.
+
+Voici les plus intéressantes:
+
+* `Evaluate` 	Permet d'exécuter en VBA une formule Excel (ce qui est à droite du signe = dans une cellule). Peut être remplacée par les par les crochets: `[2+2]` équivaut à `Evaluate("2+2")` et vaut 4. Attention ! ce qui est incorrect dans une cellule est incorrect pour `Evaluate`. 
+```
+[A1]` équivaut à `Range("A1").Value`
+`[Sum("A2:H6")]` exécute la formule Excel `Somme("A2:H6")`
+```
+* `Intersect` 	Retourne une plage formée des cellules communes de deux plages. Cette méthode permet de savoir si une cellule appartient à une plage.
+```
+Intersect(Range("A1:C4"),Range("B2:D5"))` ' équivaut à `Range("B2:C4")
+(Intersect(Range("B6"),Range("Provinces") is Nothing)` ' est faux si `B6` fait partie de la plage `Provinces`.
+```
+* `Calculate` 	Recalcule la feuille ou le classeur Excel. `
+Calculate`; `ActiveWorksheet.Calculate`
+* `Save` 	Enregistre le classeur
+```
+ActiveWorkbook.Save
+```
+* `Quit` 	Ferme Excel. Attention, si le classeur a été modifié mais non sauvegardé, la boîte de dialogue de sauvegarde d'Excel sera affichée.
+```
+    `Application.Quit`
+```
+
+* `Clear`, `ClearContents`, `ClearFormats` 	Effacent respectivement les cellules, les contenus ou les formats d'une plage.
+```
+    Range("A1").Clear
+    Worksheet("Tableaux").Clear
+```
+
+* `Copy` 	Copie le contenu d'une plage dans une autre ou dans le presse-papier
+```
+    Range("A1").Copy Range("B1") 'copie le contenu de A1 dans B1
+    Range("A1").Copy 'copie le contenu de A1 dans le presse-papier> 
+```
+PasteSpecial 	Colle le contenu d'une plage ou du presse-papier dans une plage. On peut spécifier le type de collage spécial: xlPasteAll (défaut), xlPasteAllExceptBorders,  xlPasteColumnWidths. xlPasteComments, xlPasteFormats, xlPasteFormulas, xlPasteFormulasAndNumberFormats, xlPasteValidation, xlPasteValues ou  xlPasteValuesAndNumberFormats.
+```
+    Range("Total").Copy ' copie la plage Total dans le presse-papier
+    Range("A1").PasteSpecial (xlPasteValues)
+    copie la VALEUR du presse-papier dans la cellule A1. li> 
+```
+
+* `Find` et `FindNext` 	Ces deux méthodes permettent d'effectuer une recherche dans une plage de cellules.
+* `Select` 	Sélectionne une cellule ou une feuille Excel. À éviter la plupart du temps en programmation VBA, car le déplacement du curseur Excel est rarement souhaitable pendant l'exécution d'un programme VBA.
+* `Sort` 	Tri de plage. Voir l'aide VBA Excel pour en connaître le fonctionnement. Il est aussi utile d'utiliser l'enregistreuse de macro-commandes sur un tri manuel des données pour en analyser les paramètres.
+
+###### Principaux événements Excel
+
+Objet -> Événement -> Paramètres -> Se produit lorsque
+
+* `Workbook` 	`Open` 	 -  	Le classeur Excel est ouvert 	
+* `Workbook` 	`BeforeClose` 	`Cancel` 	Lorsqu'une demande de fermeture du classeur a été faite 	
+* `Workbook` 	`SheetChange` 	`Sheet` la feuille modifiée; `Target` la plage modifiée 	Lorsqu'une cellule ou plage du classeur est modifiée 	
+* `Worksheet` 	`Change` 	`Target` la plage modifiée 	Lorsqu'une cellule ou plage de la feuille qui contient la procédure `Sub` est modifiée 	
+* `Worksheet` 	`SelectionChange` 	`Target` la nouvelle plage sélectionnée 	Lors de la sélection d'une autre plage dans un classeur 	
+
+Remarquez que dans les événements `SheetChange`, `Change` et `SelectionChange`, VBA n'a pas directement accès aux valeurs précédant le changement, ni à un paramètre Cancel pour annuler le changement. Il faut utiliser une astuce pour empêcher le changement. 
+
+On peut désactiver le traitement des événements, en utilisant la propriété `EnableEvents`.
+
+###### Autres objets intéressants
+
+* `Me`
+
+C'est un objet Excel ou VBA contenant le code en cours d'exécution. Si le code appartient à une feuille, c'est un objet `Worksheet` contenant cette feuille.
+`Me` est le plus souvent utilisé pour désigner le formulaire VBA (`Forms`) contenant le code en cours d'exécution. On évite ainsi de nommer le formulaire
+dans le code VBA , ce qui donne des programmes plus faciles à utiliser dans d'autres formulaires.
+
+- `Me.Name` contient le nom du formulaire en cours d'exécution.
+- `Me.Close` (utilisation la plus fréquente) ferme le formulaire qui contient cette ligne.
+
+* `Err`
+
+C'est un objet VBA contenant la dernière erreur rencontrée. Ses propriétés permettent d'en connaître la nature:
+
+- `Err.Description` contient la description de la dernière erreur rencontrées par VBA.
+
+VBA peut déclencher une erreur avec `Err`:
+
+-`Err.Raise 18` simule une interruption par l'utilisateur (Ctrl-Break).
+
+* `FileSystemObject`
+C'est l'objet contenant des instructions permettant à VBA d'accéder à l'arborescence de dossiers et de fichiers de l'ordinateur.
+ATTENTION ce n'est pas un objet VBA ni un objet Excel, mais un objet de la librairie Microsoft Scripting Runtime.
+
+Objets intéressants:
+* `Drives` 	Collection d'objets Drive
+* `Drive` 	Objet contenant un lecteur
+* `Folders` 	Collection d'objets Folder
+* `Folder` 	Objet contenant un dossier
+* `Files` 	Collection d'objets File
+* `File` 	Objet contenant un fichier
+
+Un objet `FileSystemObject` contient une collection `Drives`.
+Chaque objet `Drive` de la collection `Drives` contient une collection `Folders` et une collection `Files`.
+Chaque objet `Folder` d'une collection `Folders` contient une collection `Folders` et une collection `Files`.
+Chaque objet `File` d'une collection `Files` contient un fichier (document Windows).
+
+Cette structure permet de parcourir l'arborescence de documents en VBA comme avec l'explorateur Windows.
+
+#######  Objet implicite (`With`)
+
+Il arrive fréquemment qu'une série d'instructions utilise le même objet. L'écriture (et la lecture) du code VBA devient alors fastidieuse, avec la répétition incessante de la même référence.
+
+L'instruction `With` permet de réduire les répétitions. Par exemple le code:
+```
+    If Target.Interior.Color = Range("CouleurVerrou").Interior.Color Then
+        Application.EnableEvents = False 'Empêcher une boucle d'événements
+        Application.Undo                 'Annuler le changement
+        Application.EnableEvents = True  'Très important de réactiver
+    End If
+```
+peut être remplacé par celui-ci:
+```
+    With Application
+        If Target.Interior.Color = Range("CouleurVerrou").Interior.Color Then
+            .EnableEvents = False 'Empêcher une boucle d'événements
+            .Undo                 'Annuler le changement
+            .EnableEvents = True  'Très important de réactiver
+        End If
+    End With
+```
+
+##### Boites de dialogue et formulaire:
+
+https://www.lecompagnon.info/vba-excel/vba_dialogues_et_formulaires.htm
+
+##### Exercices Objets Excel
+(source: https://www.lecompagnon.info/vba-excel/vba_objetsExcel.htm)
+ Exemple 1: Changer la couleur d'arrière-plan des cellules modifiées.
+```
+ Private Sub Workbook_SheetChange(ByVal Sh As Object, ByVal Target As Range)
+'Changer l'arrière-plan d'une cellule modifiée
+    'Target est la plage modifiée (voir les paramètres de la procédure, ci-dessus)
+    Target.Interior.Color = vbYellow 'Jaune
+
+End Sub
+```
+Il est possible de restreindre les modifications à une seule feuille:
+* en insérant le code dans la procédure événementielle Worksheet_Change du module associé à la feuille voulue; ou 
+* en insérant un test sur le nom de la feuille (`Sh.Name`) dans le code suggéré (en le laissant dans le module associé au classeur) (cette solution limite l'éparpillement du code dans plusieurs modules et produit donc un programme plus facile à comprendre et à modifier plus tard)
+
+ Exemple 2: Une fonction qui affiche le contenu réel d'une cellule.
+
+```
+  Function fnValeurCellule(rCellule)
+'Retourne le contenu (formule ou valeur) de la cellule en paramètre
+    If TypeName(rCellule) <> "Range" Then  ' <> est pour "différent de"
+        fnValeurCellule = "Erreur de paramètre"
+        Exit Function
+    End If
+    fnValeurCellule = rCellule.Formula
+End Function
+```
+ 
+  Exemple 3: Empêcher la modification des cellules dont l'arrière-plan est rouge.
+
+```
+Private Sub Workbook_SheetChange(ByVal Sh As Object, ByVal Target As Range)
+'Empêcher la modification de cellules dont l'arrière-plan est d'une couleur choisie par l'utilisateur
+'Note: la feuille doit contenir une cellule nommée CouleurVerrou de la couleur choisie
+
+'Target est la plage modifiée (voir les paramètres de la procédure, ci-dessus)
+    If Target.Interior.Color = Range("CouleurVerrou").Interior.Color Then
+        Application.EnableEvents = False 'Empêcher une boucle d'événements
+        Application.Undo                 'Annuler le changement
+        Application.EnableEvents = True  'Très important de réactiver
+    End If
+End Sub
+```
+L'utilisation de la propriété `EnableEvents` pour empêcher que l'instruction suivante (la méthode `Undo`) provoque l'événement `Workbook_SheetChange` et entraîne ainsi une succession sans fin d'exécution de la procédure Sub correspondante (`Workbook_SheetChange` appelant `Workbook_SheetChange` appelant `Workbook_SheetChange`, etc.)
+
+ Exemple 4: Empêcher la modification des cellules ne faisant pas partie d'une plage.
+ 
+``` 
+Private Sub Workbook_SheetChange(ByVal Sh As Object, ByVal Target As Range)
+'Empêcher la modification de cellules en dehors d'une plage nommée ZoneDeSaisie
+'Note: le classeur doit contenir une plage nommée ZoneDeSaisie
+    'Target est la plage modifiée (voir les paramètres de la procédure, ci-dessus)
+    If Intersect(Target, Range("ZoneDeSaisie")) Is Nothing Then
+        Application.EnableEvents = False 'Empêcher une boucle d'événements
+        Application.Undo                 'Annuler le changement
+        Application.EnableEvents = True  'Très important de réactiver
+    End If
+End Sub
+```
+
+ Exemple 5: Empêcher le déplacement du curseur Excel tant qu'une condition n'est pas respectée.
+
+L'événement qui nous intéresse est `SelectionChange`, qui n'a pas de paramètre `Cancel`, donc qu'on ne peut pas annuler directement.
+La méthode `Undo` ne fonctionne pas non plus, car elle n'annule pas le déplacement. De plus, elle risquerait d'annuler une modification, alors qu'on ne veut annuler que le déplacement.
+Il faudra donc que le programme garde trace de la dernière cellule sélectionnée.
+
+```
+ Function fnDéplacementValide()
+'Retourne Vrai si la somme des cellules de la plage ZoneDeSaisie est égale à 10
+
+    fnDéplacementValide = ([sum(ZoneDeSaisie)] = 10)
+
+End Function
+
+Function fnPlageAdansPlageB(plageA, PlageB)
+'Retourne Vrai si plageA est complètement dans PlageB ou l'inverse
+
+    If Intersect(plageA, PlageB) Is Nothing Then
+        fnPlageAdansPlageB = False
+    Else
+        fnPlageAdansPlageB = (Intersect(plageA, PlageB).Count = plageA.Count)
+    End If
+
+End Function
+```
+
+ Exemple 6: Trouver toutes les cellules d'une feuille contenant le mot Liberté.
+ 
+``` 
+  Function fnTrouveMotDansPlage(sMot, rPlage)
+'Retourne une plage formée des cellules de rPlage contenant sMot
+
+Dim rTrouvée As Range 'contiendra les cellules trouvées
+Dim rCellule As Range 'contiendra chaque cellule testée, à tour de rôle
+
+    For Each rCellule In rPlage    'Pour chaque cellule de rPlage
+        'Si sMot est dans rCellule
+        If InStr(UCase(rCellule.Value), UCase(sMot)) > 0 Then
+            If rTrouvée Is Nothing Then  'Première cellule trouvée
+                Set rTrouvée = rCellule
+            Else                         'Cellules trouvées suivantes
+                Set rTrouvée = Union(rTrouvée, rCellule)
+            End If
+        End If   
+    Next
+    Set fnTrouveMotDansPlage = rTrouvée
+End Function
+```
+
+
+Le nombre de cellules contenant le mot Liberté trouvées dans la plage `A1:C6` peut maintenant être obtenu avec l'expression VBA:
+```
+fnTrouveMotDansPlage("Liberté", Range("A1:C6")).Count
+```
+ou avec la formule Excel
+```
+=NBVAL(fnTrouveMotDansPlage("Liberté";A1:C6))
+```
+On peut mettre ces cellules en rouge avec l'instruction VBA:
+```
+fnTrouveMotDansPlage("Liberté", Range("A1:C6")).interior.color = vbRed
+```
+
+
+* Puisqu'elle retourne une plage de cellules, elle ne peut pas être utilisée directement dans une cellule du classeur Excel. En effet, une cellule ne peut pas contenir une plage.
+* Mais on peut l'utiliser comme paramètre de type plage dans une fonction Excel (cf. deuxième utilisation ci-dessus)
+* La fontion `Excel Nb.Si()` joue un rôle semblable, mais dans sa version simple `(=NB.SI(A1:C6;"Liberté"))` ne comptera que les cellules dont la valeur est égale à la valeur cherchée, contrairement à `fnTrouveMotDansPlage` qui trouve les cellules qui contiennent la valeur. De plus, `fnTrouveMotDansPlage` retourne la plage et non le nombre. On peut donc manipuler le résultat en VBA en lui assignant un nom de variable:
+```
+dim rPlageTrouvée as Range
+Set rPlageTrouvée = fnTrouveMotDansPlage("Liberté", Range("A1:C6"))
+```
+
+Le même résultat peut être obtenu en utilisant les méthodes `Find` et `Findnext` dans une boucle cherchant les cellules d'une plage. 
+
+```
+Function fnTrouveMotDansPlage(sMot, rPlage)
+'Retourne une plage formée des cellules de rPlage contenant sMot
+
+Dim rTrouvées As Range
+Dim rCelluleTrouvée As Range
+Dim rPremièreTrouvée As Range
+
+    Set rCelluleTrouvée = rPlage.Find(sMot)
+    If rCelluleTrouvée Is Nothing Then
+        Exit Function 'Aucune occurrence
+    End If
+
+    'Find et FindNext trouveront toutes les occurrences,
+    'puis recommenceront à la première
+    'Il faut donc chercher jusqu'à ce qu'on trouve la première à nouveau.
+    Set rPremièreTrouvée = rCelluleTrouvée
+    Set rTrouvées = rCelluleTrouvée
+    Set rCelluleTrouvée = rPlage.FindNext(rCelluleTrouvée)
+ 
+    Do While Not rCelluleTrouvée = rPremièreTrouvée
+        Set rTrouvées = Union(rTrouvées, rCelluleTrouvée)
+        Set rCelluleTrouvée = rPlage.FindNext(rCelluleTrouvée)
+    Loop
+    Set fnTrouveMotDansPlage2 = rTrouvées
+End Function
+```
+
+Exemple 7: Obtenir le nom et la taille du dossier contenant le classeur Excel actif.
+
+```
+ Function fnDossier(Optional param = 0)
+'Retourne le nom du dossier et/ou l'espace qu'il utilise
+
+'La ligne suivante requiert une référence à Microsoft Scripting Runtime
+Dim fso As New Scripting.FileSystemObject
+
+    If param = 1 Then
+        fnDossier = ActiveWorkbook.Path
+        Exit Function
+    ElseIf param = 2 Then
+        fnDossier = (fso.GetFolder(ActiveWorkbook.Path).Size) / 1024
+        Exit Function
+    Else
+        fnDossier = ActiveWorkbook.Path & ": " & _
+            Round(fso.GetFolder(ActiveWorkbook.Path).Size / 1024, 2) & _
+            " Ko"
+    End If
+End Function
+```
+Une fonction ne peut retourner qu'une seule valeur, alors qu'ici on veut le nom te la taille du dossier. On utilise donc un paramètre pour spécifier la valeur voulue (1 retourne le nom, 2 retourne la taille), et si le paramètre est omis, la fonction retourne les deux dans une chaîne de caractères. 
+
+
+##### Exercices Tests et branchements	
+(source: https://www.lecompagnon.info/vba-excel/vba_tests.htm)
+ Exemple 1: Tester si une cellule Excel nommée "Nombre" contient un nombre.
+ 
+```
+Sub sExempleTest2()
+'Vérifier si la cellule "Nombre" contient un nombre
+    If Not IsNumeric(Range("Nombre").Value) Then
+        MsgBox"La valeur n'est pas numérique"
+        Exit Sub
+    End If
+End Sub
+```
+
+
+
+ Exemple 2: Programmer une fonction qui retourne le nom d'une province, à partir d'un sigle.
+
+```
+Function fnNomProvince2(SigleProvince)
+'Auteur: Michel Berthiaume
+'Retourner le nom d'une province
+Dim sSigleProvince As String
+
+    'D'abord tester la validité du paramètre
+    If TypeName(SigleProvince) = "Range" Then
+        sSigleProvince = UCase(SigleProvince.Value)
+    ElseIf TypeName(SigleProvince) = "String" Then
+        sSigleProvince = UCase(SigleProvince)
+    Else
+        fnNomProvince2 = "sigle inconnu"
+        Exit Function
+    End If
+
+    'Rendu ici, sSigleProvince contient une version en majuscules du sigle
+    If sSigleProvince = "AB" Then
+        fnNomProvince2 = "Alberta"
+    ElseIf sSigleProvince = "BC" Then
+        fnNomProvince2 = "Colombie Britannique"
+    ElseIf sSigleProvince = "PE" Then
+        fnNomProvince2 = "Île-du-Prince-Édouard"
+    ElseIf sSigleProvince = "NS" Then
+        fnNomProvince2 = "Nouvelle-Écosse"
+    ElseIf sSigleProvince = "NU" Then
+        fnNomProvince2 = "Nunavut"
+    ElseIf sSigleProvince = "ON" Then
+        fnNomProvince2 = "Ontario"
+    ElseIf sSigleProvince = "QC" Then
+        fnNomProvince2 = "Québec"
+    ElseIf sSigleProvince = "SK" Then
+        fnNomProvince2 = "Saskatchewan"
+    ElseIf sSigleProvince = "NF" Then
+        fnNomProvince2 = "Québec"
+    ElseIf sSigleProvince = "NT" Then
+        fnNomProvince2 = "Territoires du Nord-Ouest"
+    ElseIf sSigleProvince = "YK" Then
+        fnNomProvince2 = "Yukon"
+    Else
+        fnNomProvince2 = "Sigle inconnu"
+    End If
+End Function
+```
+
+ou en utilisant l'Instruction `Select` (sans avantage important sur la version précédente):
+
+```
+Function fnNomProvince3(SigleProvince)
+'Retourner le nom d'une province
+Dim sSigleProvince As String
+
+    'D'abord tester la validité du paramètre
+    If TypeName(SigleProvince) = "Range" Then
+        sSigleProvince = UCase(SigleProvince.Value)
+    ElseIf TypeName(SigleProvince) = "String" Then
+        sSigleProvince = UCase(SigleProvince)
+    Else
+        fnNomProvince3 = "sigle inconnu"
+        Exit Function
+    End If
+
+    'Rendu ici, sSigleProvince contient une version en majuscules du sigle
+    Select Case sSigleProvince
+        Case "AB"
+            fnNomProvince3 = "Alberta"
+        Case "BC"
+            fnNomProvince3 = "Colombie Britannique"
+        Case "PE"
+            fnNomProvince3 = "Île-du-Prince-Édouard"
+        Case "NS"
+            fnNomProvince3 = "Nouvelle-Écosse"
+        Case "NU"
+            fnNomProvince3 = "Nunavut"
+        Case "ON"
+            fnNomProvince3 = "Ontario"
+        Case "QC"
+            fnNomProvince3 = "Québec"
+        Case "SK"
+            fnNomProvince3 = "Saskatchewan"
+        Case "NF"
+            fnNomProvince3 = "Québec"
+        Case "NT"
+            fnNomProvince3 = "Territoires du Nord-Ouest"
+        Case "YK"
+            fnNomProvince3 = "Yukon"
+        Case Else
+            fnNomProvince3 = "Sigle inconnu"
+    End Select
+End Function
+```
+
+##### Exercices: Erreurs	
+(source: https://www.lecompagnon.info/vba-excel/vba_erreurs.htm)
+
+Exemple 1: Capturer n'importe quelle erreur
+```
+Function fnMoyenneMoinsMin(rPlage)
+'Calculer la moyenne 'moins la valeur la plus basse des valeurs d'une plage
+Dim cSomme As Currency
+Dim cMin As Currency
+Dim rCellule As Range
+
+    On Error GOTO Erreur:
+
+    'Initialiser à la 1ère valeur de la plage
+    cMin = rPlage.Cells(1, 1).Value
+
+    For Each rCellule In rPlage
+        cSomme = cSomme + rCellule.Value
+        cMin = fnMin(rCellule.Value, cMin)
+    Next
+
+    fnMoyenneMoinsMin = (cSomme - cMin) / (rPlage.Count - 1)
+
+    Exit Function
+
+Erreur:
+    fnMoyenneMoinsMin = "Erreur: " & Err.Description
+
+End Function
+```
+
+Remarquez la présence de `Exit Function` avant l'étiquette `Erreur`: évite que la gestion d'erreur soit exécutée lorsqu'il n'y a pas d'erreur. La présence d'une étiquette n'interrompt pas la procédure.
+
+Exemple 2: Capturer une erreur spécifique
+
+```
+Sub EnregistrerClasseur()
+'enregistrer le classeur
+
+    On Error GoTo Erreur:
+
+    ActiveWorkbook.Save
+
+    Exit Sub
+
+Erreur:
+    If Err.Number = 1004 Then
+        If MsgBox("Le fichier est en lecture seule. SVP corriger et cliquer Ok" & _
+            vbCrLf & "ou cliquer annuler", vbOKCancel) = vbOK Then
+            Resume
+        End If
+    End If
+End Sub
+```
+
+Exemple 3: utiliser la gestion d'erreur à d'autres fins
+
+```
+Function fnMin(a, b)
+'Retourne le minimum de a ou b
+'Retourne Null si la comparaison est impossible
+
+On Error GoTo Erreur
+
+    If a < b Then
+        fnMin = a
+    Else
+        fnMin = b
+    End If
+   
+    Exit Function
+
+Erreur: 'Gère les comparaisons impossibles, comme les pommes vs les oranges
+    fnMin = ""
+End Function
+```
+
+##### Exercices: Boucles
+(source: https://www.lecompagnon.info/vba-excel/vba_boucles.htm)
+
+Exemple 1: boucle de collection
+
+Supposons une plage de cellules Excel nommée ListeProvinces: écrire une fonction VBA qui retourne le nom associé au sigle
+```
+Function fnNomProvince4(SigleProvince)
+'Retourner le nom d'une province
+
+Dim sSigleProvince As String
+Dim rCellule As Range
+
+    fnNomProvince4 = "sigle inconnu" 'Réponse par défaut
+
+    'D'abord tester la validité du paramètre
+    If TypeName(SigleProvince) = "Range" Then
+        sSigleProvince = UCase (SigleProvince.Value)
+    ElseIf TypeName(SigleProvince) = "String" Then
+        sSigleProvince = UCase(SigleProvince)
+    Else
+        Exit Function
+    End If
+
+    'Rendu ici, sSigleProvince contient une version en majuscules du sigle
+    'Pour chaque cellule de colonne 1 de la plage nommée ListeProvinces
+    For Each rCellule In Range("ListeProvinces").Columns(1).Cells
+        If sSigleProvince = UCase(rCellule.Value) Then 'Valeur trouvée
+            fnNomProvince4 = rCellule.Offset(0, 1).Value 'Valeur de la cellule à droite
+            Exit For 'inutile de continuer: on sort de la boucle.
+        End If
+    Next
+End Function
+```
+La même, en utilisant un compteur de lignes:
+
+```
+Function fnNomProvince5(SigleProvince)
+'Auteur: Michel Berthiaume
+'Retourner le nom d'une province
+
+Dim sSigleProvince As String
+Dim lLigne as Long
+
+    fnNomProvince5 = "sigle inconnu" 'Réponse par défaut
+
+    'D'abord tester la validité du paramètre
+    If TypeName(SigleProvince) = "Range" Then
+        sSigleProvince = UCase (SigleProvince.Value)
+    ElseIf TypeName(SigleProvince) = "String" Then
+        sSigleProvince = UCase(SigleProvince)
+    Else
+        Exit Function
+    End If
+
+    'Rendu ici, sSigleProvince contient une version en majuscules du sigle
+    'On fait varier lLigne de 1 au nombre de lignes de la plage nommée ListeProvinces
+    For lLigne = 1 to Range("ListeProvinces").Rows.Count
+        If sSigleProvince = Range("ListeProvinces").Cells(lLigne, 1).Value Then
+            fnNomProvince5 = Range("ListeProvinces").Cells(lLigne, 2).Value 'Valeur de la cellule à droite
+            Exit For 'inutile de continuer: on sort de la boucle.
+        End If
+    Next
+End Function
+```
+
+Exemple 2: boucle avec compteur et accumulateur
+
+On veut une fonction `fnMoyennePlus` qui calcule la moyenne des valeurs positives d'une plage.
+```
+Function fnMoyennePlus(Plage)
+'Calculer la moyenne des valeurs positives d'une plage
+
+Dim cSomme as Currency
+Dim cCompteur as Currency
+Dim rCellule as Range
+
+    'D'abord tester la validité du paramètre
+    If TypeName(Plage) <> "Range" Then
+        Exit Function
+    End If
+
+    For each rCellule in Plage
+        If rCellule.Value > 0 Then
+            cSomme = cSomme + rCellule.Value
+            cCompteur = cCompteur +1
+        End If
+    Next
+    If cCompteur > 0 Then    'Éviter les divisions par 0
+        fnMOyennePlus = cSomme/cCompteur
+    EndIf
+End Function
+```
+Une variante de la même fonction:
+```
+Function fnMoyennePlus1(Plage)
+'Calculer la moyenne des valeurs positives d'une plage
+
+Dim lNoCellule As Long
+Dim cSomme as Currency
+Dim cCompteur as Currency
+Dim rCellule as Range
+
+    'D'abord tester la validité du paramètre
+    If TypeName(Plage) <> "Range" Then
+        Exit Function
+    End If
+
+    For lNoCellule = 1 to Plage.Cells.Count
+        If Plage.Cells(lNoCellule).Value > 0 Then
+            cSomme = cSomme + Plage.Cells(lNoCellule).Value
+            cCompteur = cCompteur + 1
+        End If
+    Next
+    If cCompteur > 0 Then    'Éviter les divisions par 0
+        fnMoyennePlus1 = cSomme/cCompteur
+    EndIf
+End Function
+```
+ 
+
+Finalement, une variante plus classique de cette solution, utilisant un compteur de lignes et un compteur de colonnes:
+```
+Function fnMoyennePlus2(Plage)
+'Calculer la moyenne des valeurs positives d'une plage
+
+Dim lNoLigne As Long
+
+Dim lNoColonne As Long
+Dim cSomme as Currency
+Dim cCompteur as Currency
+Dim rCellule as Range
+
+    'D'abord tester la validité du paramètre
+    If TypeName(Plage) <> "Range" Then
+        Exit Function
+    End If
+
+    For lNoLigne = 1 to Plage.Rows.Count              'Pour chaque ligne
+        For lNoColonne = 1 to Plage.Columns.Count     'Pour chaque colonne
+            If Plage.Cells(lNoLigne,lNoColonne).Value > 0 Then
+                cSomme = cSomme + Plage.Cells(lNoLigne,lNoColonne).Value
+                cCompteur = cCompteur + 1
+            End If
+        Next
+    Next
+    If cCompteur > 0 Then    'Éviter les divisions par 0
+        fnMoyennePlus1 = cSomme/cCompteur
+    EndIf
+End Function
+```
+
+Exemple 3: boucles de lecture
+
+Dans une boucle de lecture, le nombre d'itérations n'est pas connu au départ. L'utilisation de `For...Next` n'est donc pas approprié.
+```
+Ici, on veut saisir une série de nombres qui seront inscrits dans la feuille Excel.
+Sub SaisirNombres()
+
+'Saisir des nombres et les inscrire dans une feuille Excel
+
+Dim sSaisie As String
+Dim lNoLigne As Long
+
+    'Dans la boucle de lecture "standard", la première valeur est lue AVANT d'entrer dans la boucle
+    sSaisie = InputBox("Entrer une valeur", "Inscription de valeurs dans une feuille")
+
+    Do Until sSaisie = ""             'Le bouton Annuler de InputBox renvoie la chaîne nulle
+        If IsNumeric(sSaisie) Then
+            lNoLigne = lNoLigne + 1   'Prochaine ligne de la feuille Excel
+            Range("A1").Offset(lNoLigne, 0).Value = sSaisie
+        End If
+        sSaisie = InputBox("Entrer une valeur", "Inscription de valeurs dans une feuille")
+    Loop
+End Sub
+```
+Ce type de boucle est utilisé pour lire des données venant de requêtes SQL, de fichiers conventionnels, etc.
+Notez qu'il y a lecture AVANT d'entrer dans la boucle, puis une autre immédiatement avant la fin, et que le test de fin de lecture est en début de boucle.
+La première instruction de lecture est automatique (implicite) dans l'ouverture d'une requête SQL.
+
+Une autre façon d'arriver au même résultat:
+```
+Sub SaisirNombres1()
+'Saisir des nombres et les inscrire dans une feuille Excel
+
+Dim sSaisie As String
+Dim lNoLigne As Long
+
+    Do
+        Do
+            sSaisie = InputBox("Entrer une valeur", "Inscription de valeurs dans une feuille")
+        Loop Until IsNumeric(sSaisie) Or Len(sSaisie) = 0
+        If Len(sSaisie) = 0 Then 
+            lNoLigne = lNoLigne + 1   'Prochaine ligne de la feuille Excel
+            Range("A1").Offset(lNoLigne, 0).Value = sSaisie
+        End If
+    Loop Until sSaisie = ""             'Le bouton Annuler de InputBox renvoie la chaîne nulle
+End Sub
+```
+##### Exercices: Tableaux et collections
+(source: https://www.lecompagnon.info/vba-excel/vba_collections.htm)
+
+Exemples
+
+```
+Sub ExemplesTableaux()
+'Exemples de manipulation de collection et de tableau
+Dim cNombres() As Currency
+Dim vTableau() As Variant
+Dim lLigne As Long, lColonne As Long
+Dim tDépart As Date
+
+With Worksheets("Tableaux")
+
+    Cells.Clear
+
+    'Créer une matrice 10000x100 de nombres dans Excel
+    tDépart = Now 'Date et heure du départ
+    For lLigne = 1 To 10000
+        For lColonne = 1 To 100
+            .Cells(lLigne, lColonne) = lLigne + lColonne
+        Next
+    Next
+    MsgBox "Création de matrice Excel en " & Round((Now - tDépart) * 24 * 60 * 60, 2) & " secondes"
+
+    'Créer une matrice 10000x100 de nombres dans VBA
+    ReDim cNombres(1 To 10000, 1 To 100)
+    tDépart = Now 'Date et heure du départ
+    For lLigne = 1 To 10000
+        For lColonne = 1 To 100
+            cNombres(lLigne, lColonne) = lLigne + lColonne
+        Next
+    Next
+    MsgBox "Création de matrice VBA en " & Round((Now - tDépart) * 24 * 60 * 60, 10) & " secondes"
+
+    'Copie d'une matrice Excel dans un tableau VBA
+    'ATTENTION: le tableau DOIT ÊTRE DE TYPE Variant
+    'Le tableau est automatiquement redimensionné aux dimensions de la plage
+    vTableau = Range(.Cells(1, 1), .Cells(1000, 100))
+
+    'Copie d'une matrice VBA dans un tableau Excel
+    .Cells.Clear
+    .Range(.Cells(1, 1), .Cells(UBound(vTableau, 1), UBound(vTableau, 2))) = vTableau
+
+End With
+
+End Sub
+```
+
+
+
+
+
+##### Autres exemples
+
+
+
+
+https://www.fil.univ-lille1.fr/~sedoglav/VisualBasic/Cours01.pdf
+
+```
+ Dim Salaire,RemboursementMensuel As Decimal
+ Select Case (RemboursementMensuel/Salaire)*100
+ case Is >= 33# MsgBox("ca va pas \^etre possible")
+ case 30# To 32# MsgBox("ca va \^etre juste")
+ case 20# To 29# MsgBox("c’est OK")
+ case Else MsgBox("en chaussette")
+ End Select
+```
+
+```
+Dim mat1(3,3) As Integer = { {1,2,3}, {4,5,6}, {7,8,9} }
+Dim mat2(3,3) As Integer = { {9,8,7}, {6,5,4}, {3,2,1} }
+Dim res(3,3) As Integer
+For i As Integer=0 To 2
+  For j As Integer=0 To 2
+    res(i,j) = mat1(i,j)+mat2(i,j)
+  Next j
+Next i
+```
+
+https://www.fil.univ-lille1.fr/~sedoglav/VisualBasic/Cours03.pdf
+par valeur : c’est une copie qui est pass ́ee en param`etre`a la fonction. Cette derni`ere peut manipuler la copiemais ne peut pas modifier les valeurs des variables de laroutine appelantes ;2.par r ́ef ́erence : c’est une copie de l’adresse d’unevariable d ́efinie dans l’espace d’adressage de la fonctionappelante qui est pass ́ee en param`etre. Cette fois, laroutine appel ́ee peut modifier les variables de la routineappelantes.
+
+```
+Function SquareFct( ByVal P As Integer ) As Integer
+P *=P     ’le param\‘etre s’utilise comme
+Return P  ’ une variable usuelle
+End Function
+
+Sub SquareProc( ByRef Q As Integer )
+Q *=Q
+End Function
+
+Sub Main()
+Dim X,Y As Integer
+X=2
+Y=3
+X=SquareFct(X)
+SquareProc(Y)
+End Sub
+```
+Attention, sans pr ́ecision sur le type de passage :Function SquareFct( P As Integer ) As Integer
+
+https://www.fil.univ-lille1.fr/~sedoglav/VisualBasic/Cours03.pdf
+
+SurchargeLa signature d’une routine est constitu ́ee d’un identificateuret d’une liste de param`etre — avec de plus d’une valeur deretour pour une fonction.Il est possible d’utiliser plusieurs fois le mˆeme identificateurpour diff ́erentes signatures. Dans ce cas, cette identificateurestsurcharg ́e.
+
+```
+Overloads Function Square (ByVal X As Integer) As Integer
+return X*X
+End Function
 ```
 ```
+Overloads Function Square (ByVal X As Double) As Double
+return X*X
+End Function
 ```
+Lors de l’appel, la premi`ere version rencontr ́ee de la fonctioncorrespondant aux param`etres fournis est ex ́ecut ́ee.
+
+https://www.fil.univ-lille1.fr/~sedoglav/VisualBasic/Cours04.pdf
+D ́eclaration d’ ́enum ́erationOn peut d ́efinir des valeurs invariables li ́ees logiquemententre elles ; une d ́eclaration de mod`ele d’ ́enum ́eration est :
+
 ```
+Enum Identificateur [As DataType]
+IdentificateurDeMembre1 = ValeurInt1
+...
+IdentificateurDeMembreN = ValeurIntN
+End Enum
 ```
+
+AvecDataTypeune valeur enti`ere (Byte,ULong, etc). Sanssp ́ecification de valeur d’initialisationValeurIntJ, leJi`ememembre correspondant est initialis ́e `aJ−1. Par exemple, onpeut repr ́esenter les joursouvrablesde la semaine ainsi :
+
 ```
+Enum  JourOuvrable As UInteger
+Lundi = 1
+Mardi = 2
+Mercredi = 3
+Jeudi = 4
+Vendredi = 5
+End Enum
 ```
+
+Une  ́enum ́eration se d ́eclare hors des sous-routines.
+
+L’op ́erateur.permet d’avoir acc`es au champs de lad ́eclaration du mod`ele de l’ ́enum ́eration.IOn peut d ́eclarer une variable qui ayant pour type lemod`ele de l’ ́enum ́eration.
+
 ```
+Function Cours (Dim JoursDeTP As JourOuvrable) As Boolean
+If JoursDeTP=JourOuvrable.Mercredi
+Or JoursDeTP=JourOuvrable.Vendredi
+then return True
+End If
+Return False
+End Function
 ```
+
+D ́eclaration de structureUnestructureregroupe plusieurs valeurs de types diff ́erentsen une mˆeme entit ́e.Ielle est compos ́ee d’une suite de membres ;Ichaque membre porte un nom interne `a la structure ;Ile type des membres peut ˆetre quelconque (l’imbricationde structure est possible).
+
 ```
+Structure IdentificateurDeModele
+Dim IdentificateurMembre1 As Type1
+....
+Dim IdentificateurMembreN As TypeN
+End Structure
 ```
+
+Par exemple, on peut d ́eclarer le mod`ele de structure :
 ```
+Structure Eleve
+Dim nom As String
+Dim note As UByte
+End Structure
 ```
+Utilisation de structureL’utilisation d’une structure n ́ecessite — outre les op ́erateurscourants — l’op ́erateur.d’acc`es aux membres :
+
 ```
+Sub affichage(ByVal param As Eleve)
+MsgBox("Nom : " & param.nom & " Note : " & param.note")
+End Sub
+
+Sub Main()
+Dim etudiant As Eleve
+etudiant.nom="Bill Gates"
+etudiant.note=0
+affichage(etudiant)
+End Sub
 ```
+
+Exemple: calculer la somme d'une plage
+(source: http://eric.univ-lyon2.fr/~ricco/cours/excel/EXCEL%20-%20Cours%20-%20Programmation%20VBA.pdf, slide 33)
 ```
+'Travail sur le type Range avec un For Each
+Public FunctionMaSommeRangeEach(plageAs Range) As Double
+'variables intermédiaires
+Dim s As Double, celluleAs Range
+'initialisation de la somme
+s = 0
+'parcours de la plage de cellules
+For Each cellule In plage
+  s = s + cellule.Value
+Next cellule
+'renvoyer le résultat
+MaSommeRangeEach= s
+End Function
 ```
+
+Le type de variant peut gérer tout type de valeurs. Il est très souple, particulièrement commode quand on ne connaît pas à l’avance le type à utiliser. Mais attention, il ne faut pas en abuser, il est très lent parce que multiplie les vérifications à chaque accès à la variable correspondante
+On peut s’en servir pour renvoyer un tableau. Une fonction peut donc renvoyer plusieurs valeurs d’un coup, à l’instar des fonctions matricielles d’Excel (il faut valider la saisie de la fonction avec la séquence de touches CTRL + MAJ + ENTREE).
+
+(dans la barre de fonction d'Excel: c'est bien une fonction matricielle comme peuvent en témoigner les accolades { } qui encadrent l’appel de la fonction)
+
 ```
+'renvoyer plusieurs valeurs
+Public Function MonMinMax(a As Double, b As Double) As Variant
+'un tableau interne -matrice 2 lignes et 1 colonne
+Dim tableau(1 To 2, 1 To 1) As Double
+'identifier le min et le max
+If (a < b) Then
+  tableau(1, 1) = a
+  tableau(2, 1) = b
+Else
+  tableau(1, 1) = b
+  tableau(2, 1) = a
+End If
+'renvoyer le tableau
+MonMinMax= tableau
+End Function
+```
+
+Simulation valeurs TVA:
+(source: http://eric.univ-lyon2.fr/~ricco/cours/excel/EXCEL%20-%20Cours%20-%20Programmation%20VBA.pdf (slide 42))
+
+```
+SubSimulationTVA()
+'variables
+Dim pht As Double, pttc As Double
+Dim tva As Double
+Dim i As Long
+'début d'écriture des valeurs en ligne 2
+i = 2
+'récupérer la valeur du PHT
+pht= Cells(1, 2).Value 'enB1'faire varier la tva de 10%à 30%avec un pas de 5%
+For tva= 10 To 30 Step5
+'insérer la valeur de la TVA en B2
+  Cells(2, 2).Value = tva
+  'Récupérer le prix ttc en B3
+  pttc= Cells(3, 2).Value
+  'inscription des valeurs TVA en colonne D
+  Cells(i, 4).Value = tva
+  'PTTC en colonne E
+  Cells(i, 5).Value = pttc
+  'passage à la ligne suivante
+  i = i + 1
+Next tva
+End Sub
+```
+
+Exemple mettre en police verte les cellules contenant une valeur paire
+http://eric.univ-lyon2.fr/~ricco/cours/excel/EXCEL%20-%20Cours%20-%20Programmation%20VBA.pdf, slide 44
+
+```
+SubMesValeursPaires()
+'variable intermédiaire
+Dim cellule As Range
+'boucler sur la sélection
+For Each cellule In Selection
+'tester le contenu
+If (cellule.ValueMod2 = 0) Then
+'modifier la couleur de la police
+cellule.Font.ColorIndex= 4
+End If 
+Next cellule 
+End Sub
+```
+
+Dans une sélection, de nouveau les coordonnées sont relatives c.-à-d. le coin en haut à gauche d’une sélection correspond à la cellule (ligne n°1, colonne n°1) quelle que soit la position de la sélection dans la feuille; donc on aurait pu écrire:
+
+```
+SubMesValeursPairesBis()
+'variables intermédiaires
+Dim i As Long, j As Long
+'boucler sur les lignes
+For i = 1 To Selection.Rows.Count
+'boucler sur les colonnes
+For j = 1 To Selection.Columns.Count
+'tester le contenu
+If (Selection.Cells(i, j).Value Mod 2 = 0) Then
+'modifier la couleur de la police
+Selection.Cells(i, j).Font.ColorIndex= 4
+End If
+Next j 
+Next i 
+End Sub
+```
+
+Exemple: Identifier la première cellule contenant la valeur minimale dans une plage, mettre sa police en bleu.
+http://eric.univ-lyon2.fr/~ricco/cours/excel/EXCEL%20-%20Cours%20-%20Programmation%20VBA.pdf, slide 46
+
+Attention ! `Range` est un objet. Une affectation pour une variable objet doit être réalisée à l’aide de l’instruction `Set`
+
+```
+SubMonMinBleu()
+'variables intermédiaires min va servir de cellule témoin
+Dim cellule As Range, min As Range
+'initialisation du témoin sur la 1ère cellule
+Set min= Selection.Cells(1, 1)
+'parcourir
+For Each cellule In Selection
+'comparer avec le contenu de la cellule témoin
+If (cellule.Value< min.Value) Then
+'màj de la cellule témoin
+Setmin= cellule 
+End If
+Next cellule
+'mettre la couleur pour la cellule minimale
+min.Font.ColorIndex= 5
+End Sub
+```
+
+Une sélection peut être multiple aussi c.-à-d. contenant plusieurs "zones"
+
+le même mot clé Selection peut être exploité
+* `Selection.Areas.Count`: Nombre de "zones" dans la sélection
+* `Selection.Areas(k)`: Accès à la zone n°k (qui est de type `Range`). `Areas` est une collection de zones.
+
+Exemple: Pour chaque zone, mettre en police bleue la cellule contenant la valeur minimale 
+Selection.Areasest une collection. On peut utiliser un For Each. On aurait pu aussi passer par un accès indicé.
+
+```
+SubMonMinZoneBleu()
+'var. intermédiaires
+Dim zone As Range, min As Range
+'pour chaque zone
+For Each zone In Selection.Areas
+'à l'intérieur de chaque zone'initialisation
+Set min = zone.Cells(1, 1)
+'parcours des cellules
+For Each cellule In zone
+'comparer
+If (cellule.Value< min.Value) Then
+'màjde la variable témoin
+Set min = cellule
+End If
+Next cellule
+'mettre la couleur pour la cellule minimale
+min.Font.ColorIndex= 5
+'passage à la zone suivante
+Next zone
+End Sub
+```
+
+Excel dispose de fonctions natives puissantes. 
+Exemple afficher la moyenne pour une sélection
+
+```
+SubMaMoyenneSelection()
+'var. intermédiaire
+Dim moyenne As Double
+'vérifier la sélection
+If (Selection.Areas.Count> 1) Then
+MsgBox("Attention, ce n'est pas une sélection simple")
+Else
+'faire calculer la moyenne de la sélection par Excel
+moyenne = Application.WorksheetFunction.Average(Selection)
+MsgBox("La moyenne est " & Str(moyenne))
+End If
+End Sub
+```
+
+###### Astuces VBA
+
+https://www.excel-pratique.com/fr/astuces_vba
+
+Exemple 1: calculer le nombre de jours dans un mois ou définir le dernier jour du mois
+
+
+```
+Sub nb_jours_mois()
+    
+    'Une date quelconque pour cet exemple
+    date_test = CDate("6/2/2012")
+    
+    'Mois / année de la date
+    mois = Month(date_test)
+    annee = Year(date_test)
+    
+    'Calcul du premier jour du mois suivant
+    date_mois_suivant = DateSerial(annee, mois + 1, 1)
+    
+    'Date du dernier jour
+    dernier_jour_mois = date_mois_suivant - 1
+    
+    'Nombre de jour dans le mois (= dernier jour)
+    nb_jours = Day(dernier_jour_mois)
+    
+End Sub
+```
+
+Pour l'utiliser en tant que fonction en ajoutant le code suivant dans un module :
+```
+Function NB_JOURS(date_test As Date)
+    NB_JOURS = Day(DateSerial(Year(date_test), Month(date_test) + 1, 1) - 1)
+End Function
+```
+Exemple d'utilisation de la fonction en VBA :
+```
+Sub exemple()
+    test = NB_JOURS(Range("A1"))
+    MsgBox test
+End Sub
+```
+
+Exemple 2: dernière ligne d'un tableau
+
+Il arrive fréquemment de devoir insérer des données à la suite d'un tableau sur une feuille Excel, et pour faire cela, il faut connaître le numéro de la première ligne disponible de ce tableau.
+
+La dernière ligne non vide d'un tableau s'obtient à l'aide de :
+
+```
+Cells(Rows.Count, colonne).End(xlUp).Row
+```
+
+Pour déterminer quelle est la dernière cellule non vide d'une colonne (remplacer "colonne" par 1; pour la colonne A dans cet exemple) :
+```
+Sub exemple()
+
+    derniereLigne = Cells(Rows.Count, 1).End(xlUp).Row
+    
+    MsgBox derniereLigne
+
+End Sub
+```
+
+Si on dispose d'une lettre au lieu d'un numéro de colonne, utiliser `Range` au lieu de `Cells` :
+
+```
+Sub exemple()
+
+    derniereLigne = Range("A" & Rows.Count).End(xlUp).Row + 1
+    
+    MsgBox derniereLigne
+
+End Sub
+```
+
+Exemple 3: véfifier si une valeur est entièrement en majuscules
+
+```
+Sub test()
+
+    ma_valeur = "BonJOUR"
+    
+    If ma_valeur = UCase(ma_valeur) Then 'Test si en majuscules
+        MsgBox "Oui, ma_valeur est (entièrement) en majuscules."
+    Else
+        MsgBox "Non, ma_valeur n'est pas (entièrement) en majuscules." '<= Valeur renvoyée (car ma_valeur contient des minuscules)
+    End If
+
+End Sub
+```
+
+Exemple 4: tester si une chaîne de caractères est un palindrome
+
+```
+Function palindrome(valeur)
+    palindrome = StrReverse(valeur) = valeur
+End Function
+```
+
+Exemple 5: modifier la mise en forme de certains caractères
+
+En utilisant `Characters` avec la syntaxe: `Range("A1").Characters(NO_DEPART, NB_DE_CARACTERES)`
+
+
+```
+Sub test()
+
+    For ligne = 1 To 12
+    
+        'Contenu de la cellule
+        contenu = Cells(ligne, 1)
+        
+        'Contenu divisé en un tableau de 3 parties
+        tab_contenu = Split(contenu, " ")
+        
+        'Longueur de la partie 1
+        longueur_partie_1 = Len(tab_contenu(0))
+        
+        'Longueur de la partie 2
+        longueur_partie_2 = Len(tab_contenu(1))
+        
+        'Partie 1 en ITALIQUE
+        Cells(ligne, 1).Characters(1, longueur_partie_1).Font.Italic = True
+        
+        'Partie 2 en GRAS
+        Cells(ligne, 1).Characters(longueur_partie_1 + 2, longueur_partie_2).Font.Bold = True
+
+    Next
+End Sub
+```
+
+Exemple 6: remplacer des caractères
+
+Avec la fonction `Replace` : 
+```
+Replace(texte, valeur_avant, valeur_après)
+'ou
+Replace(texte, valeur_avant, valeur_après, départ, nombre, casse)
+```
+Exemple pour effacer les tirets:
+```
+Sub remplacer()
+    ma_chaine = "CH-34-763-92-FR-1"
+    
+    MsgBox Replace(ma_chaine, "-", " ") 'Renvoie : CH 34 763 92 FR 1
+End Sub
+```
+
+Exemple 7: supprimer des espaces inutiles
+
+La fonction `Trim` permet de retirer les espaces inutiles au début et à la fin d'une chaîne de caractères.
+
+```
+Sub exemple()
+    ma_variable = Trim(Range("A3"))
+    MsgBox ma_variable 'Renvoie "Excel-Pratique.com"
+End Sub
+```
+
+Exemple 8: chercher une valeur à l'intérieur d'une chaine de caractères
+
+La fonction `InStr` vérifie si une chaîne de caractères contient une valeur définie et renvoie la position de la première valeur trouvée (ou 0 si la valeur n'a pas été trouvée dans la chaîne).
+
+```
+InStr(départ, texte, valeur_à_rechercher)
+'ou
+InStr(départ, texte, valeur_à_rechercher, casse)
+```
+
+Lorsqu'il y a plusieurs positions à relever, il est possible de créer une boucle et de quitter celle-ci lorsque `InStr` renvoie 0 (= plus de résultat) :
+
+```
+Sub exemple()
+    
+    ma_chaine = "6397-GA12-D3-FR-GA15-XT-54PGA-GAO-4-TE-6GA9"
+    
+    positions = "" 'Pour enregistrer la liste des résultats
+    separateur = "" 'Séparateur pour la liste des résultats (vide pour la première position)
+    derniere_pos = 1 'Dernière position (pour le premier argument de InStr)
+    
+    Do
+        pos = InStr(derniere_pos, ma_chaine, "GA")
+        
+        If pos Then 'Si pas égal à 0
+            positions = positions & separateur & pos
+            separateur = "-"
+            derniere_pos = pos + 1
+        End If
+    
+    Loop While pos > 0
+    
+    'Résultat
+    MsgBox positions
+
+End Sub
+```
+
+Exemple 9: rechercher la position d'une valeur dans une variable tableau (`Array`) 
+
+```
+Function array_pos(tableau, recherche)
+    'https://www.excel-pratique.com/fr/astuces_vba/recherche-position-tableau-array
+    array_pos = -1
+    For ii = LBound(tableau) To UBound(tableau)
+        If tableau(ii) = recherche Then 'Si valeur trouvée
+            array_pos = ii
+            Exit For
+        End If
+    Next
+End Function
+```
+La fonction `array_pos` renverra ensuite la position de la première valeur trouvée dans le tableau (ou la valeur -1 si la valeur n'a pas été trouvée dans le tableau).
+
+Voici un exemple simple qui va rechercher la présence de la valeur de la variable `valeur_a_rechercher` dans le tableau `mon_tableau` et afficher ensuite sa position dans une `MsgBox` :
+
+```
+Sub test()
+    mon_tableau = Array(23, 67, 38, 17, 854, 9, 92)
+    valeur_a_rechercher = 9
+    MsgBox array_pos(mon_tableau, valeur_a_rechercher)
+End Sub
+```
+
+Exemple 10: rechercher une valeur dans une variable tableau (`Array`)
+
+```
+Function in_array(tableau, recherche)
+    'https://www.excel-pratique.com/fr/astuces_vba/recherche-tableau-array
+    in_array = False
+    For i = LBound(tableau) To UBound(tableau)
+        If tableau(i) = recherche Then 'Si valeur trouvée
+            in_array = True
+            Exit For
+        End If
+    Next
+End Function
+```
+
+La fonction `in_array` renverra ensuite `True` ou `False` en fonction du résultat.
+
+Voici un exemple simple qui va rechercher la présence de la valeur de la variable `valeur_a_rechercher` dans le tableau `mon_tableau` et afficher Vrai ou Faux dans une `MsgBox` :
+
+```
+Sub test()
+    mon_tableau = Array(23, 67, 38, 17, 854, 9, 92)
+    valeur_a_rechercher = 17
+    MsgBox in_array(mon_tableau, valeur_a_rechercher)
+
+End Sub
+```
+
+
+
 ```
 ```
 ```
