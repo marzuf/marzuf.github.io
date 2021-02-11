@@ -482,9 +482,162 @@ String exemple = " anticonstitutionnel" ;
 String avecDesEtoiles = exemple.substring(4, 16) ; // nouvelle chaine créée: "constitution " 
 ```
 
+TABLEAUX DYNAMIQUES
+
+Les tableaux dynamiques ont la particularité de pouvoir changer de taille pendant
+l’exécution du programme. 
+
+Définis à l’aide du type `ArrayList`. Pour les utiliser, ne pas oublier l'import:
+```
+import java.util.ArrayList ;
+```
+
+DÉCLARATION ET INITIALISATION
+
+Déclaration:
+```
+ArrayList<type> identificateur ;
+```
+où `type` est le type des éléments du tableau; doit obligatoirement être un type évolué.
+
+Pour initialiser un tableau dynamique initialement vide (sans aucun élément):
+```
+ArrayList<type> identificateur = new ArrayList<type>() ;
+```
+
+MÉTHODES COURANTES
+
+– `tableau.size()` renvoie la taille du tableau (de type `int`);
+– `tableau.get(i)` renvoie l’élément à l’indice `i` dans le tableau (`i` doit être un entier compris entre 0 et `tableau.size()-1`);
+– `tableau.add(valeur)` ajoute valeur à la fin de tableau;
+– `tableau.set(i, valeur)` affecte valeur à la case `i` du tableau;
+– `tableau.isEmpty()` détermine si le tableau est vide ou non (`boolean`)`;
+– `tableau.clear()` supprime tous les éléments du tableau;
+– `tableau.remove(i)` supprime l’élément à l’indice `i` du tableau.
 
 
+TABLEAU DE TYPES DE BASE
 
+Le type des éléments d’un tableau dynamique ne peut pas être un type simple. Utiliser donc des types évolués correspondant aux types simples: `Integer` pour
+int , `Double` pour double , etc. La conversion du type simple au type évolué se fait automatiquement
+(autoboxing).
+
+Comme les éléments d’un `ArrayList` sont toujours des références, on les comparera à l’aide de la
+méthode `equals()` (commune à tous les types évolués).
+
+FONCTIONS : PASSAGE DES ARGUMENTS
+
+En programmation, de façon générale, on dira que :
+– Un argument est passé par valeur si la méthode ne peut pas le modifier : la méthode créé une copie
+locale de cet argument.
+– Un argument est passé par référence si la méthode peut le modifier.
+
+Attention ! En Java, il n’existe que le **passage par valeur**, mais cela a des conséquences différentes selon que le type du
+paramètre est simple (`int`, `double`, etc.) ou évolué ( objet ).
+
+ARGUMENTS DE TYPE SIMPLE
+
+Si un argument passé à une méthode est de type simple, une modification de celui-ci dans cette méthode
+n’aura pas de conséquences sur sa valeur en dehors de la méthode puisque le passage par valeur crée une
+copie locale de cet argument. Exemple :
+
+```
+public static void main(String[] args) {
+  int val = 1;
+  m(val);
+  System.out.println("val = " + val);
+}
+static void m(int x){
+  x = x+1;
+  System.out.print("x = " + x);
+}
+// ce code affichera:
+// x=1 val=2
+```
+
+
+ARGUMENTS DE TYPE ÉVOLUÉ
+
+Pour des arguments de type évolué, qui sont pour rappel manipulés via des références, c’est la référence
+qui est passée à la méthode. Comme en Java les arguments sont passés par valeur, la référence de l’objet
+passée à la méthode est copiée. Ainsi, **si la référence est modifiée dans la méthode, cela n’aura pas d’influence sur la variable en dehors de la méthode**. 
+
+```
+public static void main(String[] args) {
+  int[] tab = {1};
+  m(tab); // tab (référence) => passage par valeur aussi
+  System.out.println("tab[0] = " + tab[0]);
+}
+static void m(int[] x){
+  int[] t = {100};
+  x = t; // Modification de la référence (on met une autre adresse dans x); ne modifie pas le tableau initial
+}
+// affiche:
+// x[0]= 100 tab[0]= 1
+```
+
+
+En revanche, même si la référence est copiée, cette copie pointe toujours vers le même objet. Ainsi, **si l’objet référencé est modifié dans la méthode, cela aura une influence sur l’objet** même en dehors de la
+méthode. 
+```
+public static void main(String[] args) {
+  int[] tab = {1};
+  m(tab); // tab (référence) => passage par valeur aussi
+  System.out.println("tab[0] = " + tab[0]);
+}
+static void m(int[] x){
+  x[0] = 100; // Modification de l'objet référencé par x => le tableau initial est modifié
+}
+// affiche
+// x[0]= 100 tab[0]= 100
+```
+
+FONCTIONS : ENTÊTES
+
+L’entête d’une méthode donne un aperçu de ce que fait la méthode. Elle est constituée de son
+nom, de ses paramètres et de son type de retour. La syntaxe est la suivante :
+```
+type_retour nom(type_1 param_1, ..., type_n param_n)
+// Exemples d’entêtes :
+static double moyenne(double x, double y)
+static int nbAuHasard()
+```
+Méthode sans valeur de retour: type spécial `void` comme type de retour.
+Méthode sans paramètres: liste de paramètres vide.
+
+BONNES PRATIQUES
+– il faut absolument éviter des effets cachés,
+des « effets de bords ».
+– il faut choisir des noms pertinents pour les méthodes et les paramètres 
+– il est recommandé de toujours commencer par écrire l’entête d’une méthode
+
+FONCTIONS : DÉFINITIONS
+
+Le compilateur affichera une erreur concernant `return` si :
+– Le type de l’expression suivant le mot-clé return n’est pas le même que le type de retour défini dans
+l’entête de la méthode.
+– L’instruction `return` n’est pas la dernière instruction du corps de la méthode : celle-ci met fin à l’exécution
+du corps, donc tout code placé après celle-ci (dans le même bloc) ne sera jamais exécuté.
+
+MÉTHODE MAIN
+
+Par convention, tout programme Java doit avoir une méthode `main` = première méthode
+qui est appelée dans notre programme. L’entête autorisée est la suivante :
+```
+public static void main(String[] args)
+```
+
+FONCTIONS : SURCHARGE
+
+surcharge = définir plusieurs méthodes qui ont le même nom si le nombre ou le type des
+paramètres sont différents
+
+En Java, deux méthodes sont différenciées non seulement par leur nom, mais aussi par le type de leurs
+paramètres (= signature de la méthode). 
+
+Attention ! On n’a pas le droit d’avoir deux
+méthodes de même nom et de mêmes paramètres, même si le type de retour est différent ! Par exemple,
+on ne peut pas avoir deux méthodes `int f(int)` et `double f(int)`.
 
 
 ```
